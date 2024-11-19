@@ -17,7 +17,9 @@ This is a METU EE493-494 project. The aim of the project is the implementation o
     *   "git push"      WARNING: !!! IF THERE IS ERROR WHILE PUSHING, DO NOT FORCE TO PUSH IT
 -   The following command calls the provious commit of project.
     *   "git checkout -commit code-" 
-
+-   The following command make configuration for project
+    *   "git config --global user.name -Github name-"
+    *   "git config --global user.email -Github email-"
 ## 3. 
                     
 
