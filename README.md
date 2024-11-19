@@ -13,7 +13,7 @@ This is a METU EE493-494 project. The aim of the project is the implementation o
 -   The following commands add and save your changes in your local memory.
     *   "git add -file you want to save for everything you can put dot-"
     *   "git commit -m -the message for commit-"
--   The following commands send (commit) your changes. The changes you did can be seed by other developeres.
+-   The following commands send (commit) your changes. The changes you did can be seen by other developeres.
     *   "git push"      WARNING: !!! IF THERE IS ERROR WHILE PUSHING, DO NOT FORCE TO PUSH IT
 -   The following command calls the provious commit of project.
     *   "git checkout -commit code-" 
