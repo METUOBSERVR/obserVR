@@ -9,13 +9,16 @@ else
 endif
 
 # Compiler flags: Wall for warnings, O3 for optimization, and C++17 standard
-CXXFLAGS ?= -Wall -O3 -std=c++17
+CXXFLAGS ?= -Wall -O3 -std=c++17 -I$(SRC_DIR)  # Add -I$(SRC_DIR) for header files in SRC
 
 # Compiler to use
 CXX := g++
 
 # Source files directory
 SRC_DIR  := SRC
+
+# Header files directory (if you have a specific directory for header files)
+INC_DIR  := include
 
 # Find all C and C++ source files in the SRC directory
 SRCS_C   := $(wildcard $(SRC_DIR)/*.c)
@@ -51,11 +54,11 @@ endif
 
 # Rule to compile C source files into object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -I$(SRC_DIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -c $< -o $@
 
 # Rule to compile C++ source files into object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -I$(SRC_DIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -c $< -o $@
 
 # Rule to create the object directory
 $(OBJ_DIR):
