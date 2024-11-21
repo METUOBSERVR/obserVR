@@ -19,7 +19,9 @@ This is a METU EE493-494 project. The aim of the project is the implementation o
     *   "git checkout -commit code-" 
 -   The following command make configuration for project
     *   "git config --global user.name -Github name-"
-    *   "git config --global user.email -Github email-"
+    *   "git config --global user.email -Github email-
+-   The following command update your project to lastest commit
+     * "git pull"
 ## 3. 
                     
 
