@@ -1,0 +1,12 @@
+[General]
+ipc_version=4
+file=i2c_master
+module=i2c_master_driver
+target_device=gw2ar18c-000
+type=i2c_master
+version=1.0
+
+[Config]
+DISABLE_IO_INSERTION=true
+LANG=0
+Synthesis_tool=GowinSynthesis

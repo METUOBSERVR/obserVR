@@ -5,6 +5,7 @@
     <Version>5</Version>
     <Device name="GW2AR-18C" pn="GW2AR-LV18QN88C8/I7">gw2ar18c-000</Device>
     <FileList>
+        <File path="src/i2c_master/i2c_master.v" type="file.verilog" enable="1"/>
         <File path="C:/Project/OBSERVR/obserVR/SENSOR/SOURCE/FIRMWARE/SOURCES/I2C/i2c.v" type="file.verilog" enable="1"/>
         <File path="C:/Project/OBSERVR/obserVR/SENSOR/SOURCE/FIRMWARE/SOURCES/MPU9250_CONTROLLER.v" type="file.verilog" enable="1"/>
     </FileList>

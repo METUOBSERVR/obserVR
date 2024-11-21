@@ -5,6 +5,16 @@
   "InstName" : "i2c",
   "ModuleFile" : "C:/Project/OBSERVR/obserVR/SENSOR/SOURCE/FIRMWARE/SOURCES/I2C/i2c.v",
   "ModuleLine" : 1,
-  "ModuleName" : "i2c"
+  "ModuleName" : "i2c",
+  "SubInsts" : [
+   {
+    "InstFile" : "C:/Project/OBSERVR/obserVR/SENSOR/SOURCE/FIRMWARE/SOURCES/I2C/i2c.v",
+    "InstLine" : 6,
+    "InstName" : "your_instance_name",
+    "ModuleFile" : "C:/Project/OBSERVR/obserVR/SENSOR/SOURCE/FIRMWARE/PROJECT/MPU9250_CONTROLLER/src/i2c_master/i2c_master.v",
+    "ModuleLine" : 1,
+    "ModuleName" : "i2c_master_driver"
+   }
+  ]
  }
 ]

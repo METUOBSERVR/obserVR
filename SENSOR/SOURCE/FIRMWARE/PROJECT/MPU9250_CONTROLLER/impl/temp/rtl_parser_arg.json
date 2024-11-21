@@ -8,6 +8,10 @@
   {
    "Path" : "C:/Project/OBSERVR/obserVR/SENSOR/SOURCE/FIRMWARE/SOURCES/I2C/i2c.v",
    "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/Project/OBSERVR/obserVR/SENSOR/SOURCE/FIRMWARE/PROJECT/MPU9250_CONTROLLER/src/i2c_master/i2c_master.v",
+   "Type" : "verilog"
   }
  ],
  "IncludePath" : [
