@@ -1,0 +1,3 @@
+D:/Ongoing/obserVR/CAMERA/Firmware/cmake-build-debug/CMakeFiles/Firmware.dir
+D:/Ongoing/obserVR/CAMERA/Firmware/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Ongoing/obserVR/CAMERA/Firmware/cmake-build-debug/CMakeFiles/rebuild_cache.dir

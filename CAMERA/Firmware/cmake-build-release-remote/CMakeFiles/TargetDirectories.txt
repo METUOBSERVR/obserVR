@@ -1,0 +1,3 @@
+/home/oVR/obserVR/CAMERA/Firmware/pi-build/cmake-build-release-remote/CMakeFiles/Firmware.dir
+/home/oVR/obserVR/CAMERA/Firmware/pi-build/cmake-build-release-remote/CMakeFiles/edit_cache.dir
+/home/oVR/obserVR/CAMERA/Firmware/pi-build/cmake-build-release-remote/CMakeFiles/rebuild_cache.dir
