@@ -59,7 +59,7 @@ class EgoMotion:
         self.Rpose = r
         self.Tpose = t
 
-        self.cam = cv2.VideoCapture(capdev)
+        self.cam = cv2.VideoCapture(capdev, cv2.CAP_V4L2)
         self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, framewidth)
         self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, frameheight)
         self.cam.set(cv2.CAP_PROP_FPS, fps)
