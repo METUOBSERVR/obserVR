@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     print("When the program is running, you can stop it by entering q")
     i = None
-    while i != "Y" or i != "y":
+    while i != "Y" and i != "y":
         i = input("To start enter Y/y")
 
     _thread.start_new_thread(input_thread, ())
