@@ -37,6 +37,11 @@ if __name__ == '__main__':
 
     endFlag = False
 
+    print("When the program is running, you can stop it by entering q")
+    i = None
+    while i != "Y" or i != "y":
+        i = input("To start enter Y/y")
+
     _thread.start_new_thread(input_thread, ())
 
     # Loop until exit
@@ -47,9 +52,14 @@ if __name__ == '__main__':
         if ret:
             egomotion.calculate_egomotion(drawpoints=False, showtR=False)
 
+        td = egomotion.current_location()
+        Rd = egomotion.current_rotation()
+
         t.append(time.time() - t0)
-        tdata.append(egomotion.current_location())
-        Rdata.append(egomotion.current_rotation())
+        tdata.append(td)
+        Rdata.append(Rd)
+
+        print(f"X\t{td[0][0]:.4f}\t\tY\t{td[1][0]:.4f}\t\tZ\t{td[2][0]:.4f}\nPIT\t{Rd[0]:.4f}\t\tYAW\t{Rd[1]:.4f}\t\tROL\t{Rd[2]:.4f}")
 
     cv2.destroyAllWindows()
     egomotion.release_cam()
@@ -59,4 +69,6 @@ if __name__ == '__main__':
     df = pd.DataFrame(
         {"t": t, 'x': tdata[:, 0], 'y': tdata[:, 1], 'z': tdata[:, 2], 'pitch': Rdata[:, 0], 'yaw': Rdata[:, 1],
          'roll': Rdata[:, 2]})
-    df.to_csv(datetime.datetime.now().strftime("outputs/%d%b%Y_%H.%M.%S.csv"), index=False)
+    fname = datetime.datetime.now().strftime("outputs/%d%b%Y_%H.%M.%S.csv")
+    df.to_csv(fname, index=False)
+    print(f"Saved data at {fname}")

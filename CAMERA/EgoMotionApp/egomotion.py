@@ -9,6 +9,7 @@ import numpy as np
 from copy import deepcopy
 from scipy.spatial.transform import Rotation
 from pickle import dump, load
+from sys import platform
 
 
 class EgoMotion:
@@ -59,7 +60,10 @@ class EgoMotion:
         self.Rpose = r
         self.Tpose = t
 
-        self.cam = cv2.VideoCapture(capdev, cv2.CAP_V4L2)
+        if platform == "linux" or platform == "linux2":
+            self.cam = cv2.VideoCapture(capdev, cv2.CAP_V4L2)
+        else:
+            self.cam = cv2.VideoCapture(capdev)
         self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, framewidth)
         self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, frameheight)
         self.cam.set(cv2.CAP_PROP_FPS, fps)
