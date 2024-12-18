@@ -237,7 +237,7 @@ class mpu9250
     Serial.println("--***---");
     updateAccelerationXoffset(Xb);
     updateAccelerationYoffset(Yb);
-    updateAccelerationZoffset(Zb - 16384/8);
+    updateAccelerationZoffset(Zb - 16384/16);
     if (this->isReady())
       {
         this->readAcceleration();
@@ -297,19 +297,19 @@ void loop()
     BackFloatAcceleration[1] = FloatAcceleration[1];
     BackFloatAcceleration[2] = FloatAcceleration[2];
     IMU.readAcceleration();  // Read acceleration data
-    if ((FloatAcceleration[0] > 0.15) || (FloatAcceleration[0] < -0.15) )
+    if ((FloatAcceleration[0] > 0.08) || (FloatAcceleration[0] < -0.08) )
     {
-      FloatVelocity[0] += (FloatAcceleration[0] - BackFloatAcceleration[0]) * 0.250;
+      FloatVelocity[0] += (FloatAcceleration[0]) * 0.250;
       FloatLocation[0] += FloatVelocity[0] * 0.250;
     };
-    if ((FloatAcceleration[1] > 0.15) || (FloatAcceleration[1] < -0.15) )
+    if ((FloatAcceleration[1] > 0.08) || (FloatAcceleration[1] < -0.08) )
     {
-      FloatVelocity[1] += (FloatAcceleration[1] - BackFloatAcceleration[1]) * 0.250;
+      FloatVelocity[1] += (FloatAcceleration[1]) * 0.250;
       FloatLocation[1] += FloatVelocity[1] * 0.250;
     };
-    if ((FloatAcceleration[2] > 0.15) || (FloatAcceleration[2] < -0.15) )
+    if ((FloatAcceleration[2] > 0.08) || (FloatAcceleration[2] < -0.08) )
     {
-      FloatVelocity[2] += (FloatAcceleration[2] - BackFloatAcceleration[2]) * 0.250;
+      FloatVelocity[2] += (FloatAcceleration[2]) * 0.250;
       FloatLocation[2] += FloatVelocity[2] * 0.250;
     };
     if (print == 100)
