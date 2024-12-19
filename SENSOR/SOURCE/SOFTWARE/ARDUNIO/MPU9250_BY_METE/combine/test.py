@@ -1,109 +1,149 @@
 import serial
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import math
 import time
 
-# Initialize global variables
-x_data = []
-y_data = []
-z_data = []
+# Madgwick Filter Implementation (Simple version)
+class MadgwickFilter:
+    def __init__(self, beta=0.1):
+        self.beta = beta  # Filter gain
+        self.q0, self.q1, self.q2, self.q3 = 1.0, 0.0, 0.0, 0.0  # Quaternion values
 
-# Serial port configuration
-ser = serial.Serial(
-    port='COM6',  # Change this to your COM port
-    baudrate=115200,
-    timeout=1
-)
+    def update(self, ax, ay, az, gx, gy, gz, dt):
+        # Auxiliary variables
+        q0, q1, q2, q3 = self.q0, self.q1, self.q2, self.q3
+        norm = math.sqrt(ax*ax + ay*ay + az*az)
+        if norm == 0:
+            return
+        ax, ay, az = ax/norm, ay/norm, az/norm  # Normalize accelerometer measurement
 
-def parse_data(data):
-    """
-    Parses the incoming data from the serial port to extract IMU values.
-    """
-    imu_data = {
-        "Location:": {"X": 0.0, "Y": 0.0, "Z": 0.0},
-        "Filtered Location:": {"X": 0.0, "Y": 0.0, "Z": 0.0},
-        "Target Location:": {"X": 0.0, "Y": 0.0, "Z": 0.0}
-    }
+        # Gradient descent algorithm corrective step
+        s0 = -2.0 * (q2 * gx - q1 * gy + q3 * gz)
+        s1 = 2.0 * (q1 * gx + q2 * gy + q0 * gz)
+        s2 = 2.0 * (q0 * gx - q3 * gy - q1 * gz)
+        s3 = 2.0 * (q3 * gx + q0 * gy + q2 * gz)
 
-    current_section = None
-    for line in data.splitlines():
-        line = line.strip()
-        if not line:
-            continue  # Skip empty lines
-        if line in imu_data:
-            current_section = line
-            print(f"Detected section: {current_section}")  # Debugging line
-        elif current_section:
-            try:
-                if line.startswith("X:"):
-                    imu_data[current_section]['X'] = float(line.split()[1])
-                elif line.startswith("Y:"):
-                    imu_data[current_section]['Y'] = float(line.split()[1])
-                elif line.startswith("Z:"):
-                    imu_data[current_section]['Z'] = float(line.split()[1])
-            except (IndexError, ValueError) as e:
-                print(f"Error parsing line '{line}': {e}")  # Debugging line
+        # Normalize the gradient to make it unit length
+        norm = math.sqrt(s0 * s0 + s1 * s1 + s2 * s2 + s3 * s3)
+        s0, s1, s2, s3 = s0 / norm, s1 / norm, s2 / norm, s3 / norm
 
-    return imu_data
+        # Apply the gradient descent correction to the quaternion
+        q0 += s0 * dt * 0.5
+        q1 += s1 * dt * 0.5
+        q2 += s2 * dt * 0.5
+        q3 += s3 * dt * 0.5
 
+        # Normalize the quaternion
+        norm = math.sqrt(q0*q0 + q1*q1 + q2*q2 + q3*q3)
+        self.q0, self.q1, self.q2, self.q3 = q0 / norm, q1 / norm, q2 / norm, q3 / norm
 
-def read_serial_data():
-    """
-    Reads data from the serial port and parses it.
-    """
-    if ser.in_waiting > 0:
-        raw_data = ser.read(ser.in_waiting).decode('utf-8', errors='replace')
-        print("Raw data received:", raw_data)  # Debugging line
-        return parse_data(raw_data)
-    return None
+    def get_euler_angles(self):
+        # Compute pitch, roll, yaw from the quaternion
+        pitch = math.atan2(2.0*(self.q0*self.q1 + self.q2*self.q3), 1.0 - 2.0*(self.q1*self.q1 + self.q2*self.q2))
+        roll = math.asin(2.0*(self.q0*self.q2 - self.q3*self.q1))
+        yaw = math.atan2(2.0*(self.q0*self.q3 + self.q1*self.q2), 1.0 - 2.0*(self.q2*self.q2 + self.q3*self.q3))
+
+        # Convert from radians to degrees
+        pitch, roll, yaw = math.degrees(pitch), math.degrees(roll), math.degrees(yaw)
+        return pitch, roll, yaw
+
+# Serial Configuration
+SERIAL_PORT = 'COM6'  # Replace with your Arduino's serial port
+BAUD_RATE = 115200      # Match the baud rate of your Arduino
+UPDATE_INTERVAL = 10  # Number of captures before updating the plot
+
+# Initialize variables for plotting
+x_data, y_data, z_data = [], [], []
+capture_count = 0
+
+# Initialize the plot
+plt.ion()
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot formatting
+ax.set_title("Real-Time Accelerometer Data")
+ax.set_xlabel("X-Axis (g)")
+ax.set_ylabel("Y-Axis (g)")
+ax.set_zlabel("Z-Axis (g)")
+ax.set_xlim(-1, 1)  # Adjust based on your accelerometer range
+ax.set_ylim(-1, 1)
+ax.set_zlim(-1, 1)
+
+# Initialize the Madgwick filter
+madgwick_filter = MadgwickFilter(beta=0.1)
 
 def update_plot():
-    """
-    Continuously update the plot with new data from the serial port.
-    """
-    global x_data, y_data, z_data
+    """Update Matplotlib 3D plot with new data."""
+    ax.clear()
+    ax.set_title("Real-Time Accelerometer Data")
+    ax.set_xlabel("X-Axis (g)")
+    ax.set_ylabel("Y-Axis (g)")
+    ax.set_zlabel("Z-Axis (g)")
+    ax.set_xlim(-1, 1)
+    ax.set_ylim(-1, 1)
+    ax.set_zlim(-1, 1)
+    ax.scatter(x_data, y_data, z_data, c='b', marker='o')  # Scatter plot for real-time data
+    plt.draw()
+    plt.pause(0.01)
 
-    plt.ion()
-    fig, ax = plt.subplots()
-    ax.set_xlim(0, 100)  # Adjust as needed
-    ax.set_ylim(-10, 10)  # Adjust as needed
-
-    x_line, = ax.plot([], [], label="X")
-    y_line, = ax.plot([], [], label="Y")
-    z_line, = ax.plot([], [], label="Z")
-
-    plt.legend()
-    plt.xlabel("Time")
-    plt.ylabel("Value")
-
-    while True:
-        imu_data = read_serial_data()
-        if imu_data:
-            x_data.append(imu_data["Location:"]["X"])
-            y_data.append(imu_data["Location:"]["Y"])
-            z_data.append(imu_data["Location:"]["Z"])
-
-            # Keep the plot within the last 100 data points
-            if len(x_data) > 100:
-                x_data = x_data[-100:]
-                y_data = y_data[-100:]
-                z_data = z_data[-100:]
-
-            x_line.set_data(range(len(x_data)), x_data)
-            y_line.set_data(range(len(y_data)), y_data)
-            z_line.set_data(range(len(z_data)), z_data)
-
-            ax.set_xlim(0, len(x_data))
-
-            plt.pause(0.01)
-
-if __name__ == "__main__":
+def parse_data(data_lines):
+    """Parse the DATA section from serial output."""
     try:
-        print("Starting to read and plot data...")
-        update_plot()
-    except KeyboardInterrupt:
-        print("Program interrupted.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-    finally:
-        ser.close()
-        print("Serial port closed.")
+        x = float(data_lines[1])
+        y = float(data_lines[2])
+        z = float(data_lines[3])
+        gx = float(data_lines[4])  # Gyroscope X
+        gy = float(data_lines[5])  # Gyroscope Y
+        gz = float(data_lines[6])  # Gyroscope Z
+        return x, y, z, gx, gy, gz
+    except (IndexError, ValueError) as e:
+        print(f"Parsing error: {e}")
+        return None, None, None, None, None, None
+
+try:
+    # Open serial connection
+    with serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1) as ser:
+        prev_time = time.time()
+        while True:
+            if ser.in_waiting:
+                try:
+                    # Read the "DATA:" block
+                    line = ser.readline().decode('utf-8', errors='ignore').strip()
+                    if line == "DATA:":
+                        # Capture the next three lines for X, Y, and Z values
+                        data_lines = [line]
+                        for _ in range(6):
+                            data_lines.append(ser.readline().decode('utf-8', errors='ignore').strip())
+
+                        # Parse accelerometer and gyroscope data
+                        x, y, z, gx, gy, gz = parse_data(data_lines)
+                        if x is not None and y is not None and z is not None:
+                            # Apply Madgwick filter with accelerometer and gyroscope data
+                            current_time = time.time()
+                            dt = current_time - prev_time
+                            prev_time = current_time
+                            madgwick_filter.update(x, y, z, gx, gy, gz, dt)
+                            pitch, roll, yaw = madgwick_filter.get_euler_angles()
+
+                            # Store pitch, roll, yaw for plotting
+                            x_data.append(pitch)
+                            y_data.append(roll)
+                            z_data.append(yaw)
+                            capture_count += 1
+
+                        # Update plot every UPDATE_INTERVAL captures
+                        if capture_count % UPDATE_INTERVAL == 0:
+                            update_plot()
+
+                except Exception as e:
+                    print(f"Error: {e}")
+
+except KeyboardInterrupt:
+    print("Program terminated by user.")
+except Exception as e:
+    print(f"Error: {e}")
+finally:
+    plt.ioff()
+    plt.show()

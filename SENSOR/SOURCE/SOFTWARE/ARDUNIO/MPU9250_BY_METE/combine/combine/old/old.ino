@@ -12,65 +12,6 @@
 #define I2C_CLOCK_FREQUENCY 400000
 //#define DEBUG
 // ---
-#define FILTER_ORDER 46  // Filter order (number of taps - 1)
-float coefficients[] = {
-    0.000000000000000000,
-    -0.001884249596973500,
-    -0.010367166384385500,
-    -0.014964411705062400,
-    0.009289392902356300,
-    0.072286947863283600,
-    0.132851905489640000,
-    0.100494683086973500,
-    -0.094305879612558900,
-    -0.391858238545700700,
-    -0.557447846675859300,
-    -0.299370171182356600,
-    0.461803526025833600,
-    1.357105237620096500,
-    1.628090370920247400,
-    0.597476400174303100,
-    -1.660400808788195200,
-    -3.938156534710095200,
-    -4.243981123452575400,
-    -0.881565934833205900,
-    6.310669660962553400,
-    15.402413455890662200,
-    23.023651639623526900,
-    25.996338289854981100,
-    23.023651639623529700,
-    15.402413455890662200,
-    6.310669660962552100,
-    -0.881565934833206300,
-    -4.243981123452576800,
-    -3.938156534710095200,
-    -1.660400808788195200,
-    0.597476400174303600,
-    1.628090370920247700,
-    1.357105237620096100,
-    0.461803526025833300,
-    -0.299370171182356700,
-    -0.557447846675859700,
-    -0.391858238545700900,
-    -0.094305879612559000,
-    0.100494683086973600,
-    0.132851905489640000,
-    0.072286947863283700,
-    0.009289392902356300,
-    -0.014964411705062400,
-    -0.010367166384385500,
-    -0.001884249596973500,
-    0.000000000000000000
-};
-
-
-#define SAMPLE_RATE 1000  // Sampling rate in Hz
-#define MAX_SAMPLES 100  // Number of samples for processing (adjust as needed)
-
-float bufferY[FILTER_ORDER + 1];
-float bufferX[FILTER_ORDER + 1];
-int bufferIndexX = 0;
-int bufferIndexY = 0;
 
 
 
@@ -104,27 +45,120 @@ int bufferIndexY = 0;
 #define MPU9250_GYRO_OFFSET_YL 0x16
 #define MPU9250_GYRO_OFFSET_ZH 0x17
 #define MPU9250_GYRO_OFFSET_ZL 0x18
-#define MPU9250_ACCELCNFG_2 0x1D
 // ---
 
 
 // GENERAL STATIC VARIABLE 
 // ---
-static uint16_t   rawAccel[3];
-static double    floatAccel[3];
-static double    prevfloatAccel[3];
-static double    floatAccelVel[3];
-static double    floatAccelLoc[3];
-static uint16_t  rawGyro[3];
-static double    floatGyro[3];
-static double    floatGyroLoc[3];
-static int print = 0;
-static int step = 0;
-
-static float twoKp;			// 2 * proportional gain (Kp)
-static float twoKi;			// 2 * integral gain (Ki)
-static float q0, q1, q2, q3;	// quaternion of sensor frame relative to auxiliary frame
-
+static uint16_t rawAccel[3];
+static float    floatAccel[3];
+static float    PreviousFloatAccel[3];
+static float    floatAccelVel[3];
+static float    floatAccelLoc[3];
+static float    FilteredfloatAccelLoc[3];
+static float    SecondFilteredfloatAccelLoc[3];
+static float    inputSamples[93];
+static uint16_t rawGyro[3];
+static float    floatGyro[3];
+static float    floatGyroLoc[3];
+static int print    = 0;
+static int calib    = 0;
+float filterCoefficients[93] = {
+    0.000000000000000002,
+    -0.000000000000000002,
+    0.000000000598135125,
+    0.000000000000000007,
+    -0.000000005460708540,
+    -0.000000000000000001,
+    0.000000009932118071,
+    0.000000000000000001,
+    0.000000020448150238,
+    0.000000000000000002,
+    -0.000000054082152198,
+    0.000000000000000004,
+    -0.000000054247141676,
+    -0.000000000000000007,
+    0.000000178113489813,
+    0.000000000000000001,
+    0.000000131275955951,
+    0.000000000000000001,
+    -0.000000472579839186,
+    -0.000000000000000002,
+    -0.000000475816896126,
+    -0.000000000000000002,
+    0.000000790014721470,
+    0.000000000000000000,
+    0.000050568126508800,
+    -0.000000007067912341,
+    0.000000825452202147,
+    0.000000033531580276,
+    -0.001712761089239415,
+    0.000000092773479247,
+    -0.000000307613156992,
+    -0.000000206418860774,
+    0.008662459603143657,
+    -0.000000405525953679,
+    0.000000106564804366,
+    0.000000733610739226,
+    -0.028541715285338283,
+    0.000001256652953179,
+    -0.000000027267777360,
+    -0.000002095952709380,
+    0.080191208343845716,
+    -0.000003548205540672,
+    0.000000002940974838,
+    0.000006696378811801,
+    -0.308687348285202612,
+    0.000021362808049876,
+    0.500026015457524009,
+    0.000021362808049855,
+    -0.308687348285202390,
+    0.000006696378811808,
+    0.000000002940974803,
+    -0.000003548205540677,
+    0.080191208343845993,
+    -0.000002095952709382,
+    -0.000000027267777272,
+    0.000001256652953178,
+    -0.028541715285338297,
+    0.000000733610739223,
+    0.000000106564804328,
+    -0.000000405525953678,
+    0.008662459603143737,
+    -0.000000206418860777,
+    -0.000000307613156996,
+    0.000000092773479247,
+    -0.001712761089239426,
+    0.000000033531580274,
+    0.000000825452202113,
+    -0.000000007067912339,
+    0.000050568126508813,
+    -0.000000000000000001,
+    0.000000790014721458,
+    0.000000000000000000,
+    -0.000000475816896106,
+    -0.000000000000000006,
+    -0.000000472579839233,
+    0.000000000000000002,
+    0.000000131275955953,
+    -0.000000000000000001,
+    0.000000178113489821,
+    -0.000000000000000001,
+    -0.000000054247141678,
+    0.000000000000000005,
+    -0.000000054082152200,
+    -0.000000000000000001,
+    0.000000020448150242,
+    -0.000000000000000001,
+    0.000000009932118080,
+    0.000000000000000002,
+    -0.000000005460708535,
+    -0.000000000000000002,
+    0.000000000598135104,
+    0.000000000000000004,
+    0.000000000000000012,
+};
+// ---
 
 // MPU9250 CLASS 
 // ---
@@ -172,17 +206,17 @@ class MPU9250
     {
       int16_t tmp = 0;
       tmp = (int16_t)rawAccel[0];
-      floatAccel[0] = (double)tmp;
+      floatAccel[0] = (float)tmp;
       floatAccel[0] = (floatAccel[0]/32768.0)*2.0; 
-      floatAccel[0] = floatAccel[0] - (double)startAccel[0]; //+ 1.0 * sin(2*PI*(floatGyroLoc[1]/360.0)); 
-      tmp = (int16_t)rawAccel[1];//
-      floatAccel[1] = (double)tmp;//
-      floatAccel[1] = (floatAccel[1]/32768.0)*2.0;//
-      floatAccel[1] = floatAccel[1] - (double)startAccel[1]; //- 1.0 * sin(2*PI*(floatGyroLoc[0]/360.0));
-      tmp = (int16_t)rawAccel[2];//
-      floatAccel[2] = (double)tmp;//
-      floatAccel[2] = (floatAccel[2]/32768.0)*2.0;//
-      floatAccel[2] = floatAccel[2] - (double)startAccel[2]; //-  1.0 * cos(2*PI*(floatGyroLoc[0]/360.0)) - 1.0 * cos(2*PI*(floatGyroLoc[1]/360.0)) + 2.0; 
+      floatAccel[0] = floatAccel[0]; //- (float)startAccel[0]; 
+      tmp = (int16_t)rawAccel[1];
+      floatAccel[1] = (float)tmp;
+      floatAccel[1] = (floatAccel[1]/32768.0)*2.0;
+      floatAccel[1] = floatAccel[1]; //- (float)startAccel[1]; 
+      tmp = (int16_t)rawAccel[2];
+      floatAccel[2] = (float)tmp;
+      floatAccel[2] = (floatAccel[2]/32768.0)*2.0;
+      floatAccel[2] = floatAccel[2]; //- (float)startAccel[2]; 
     };
 
     void getRawGyro()
@@ -202,17 +236,17 @@ class MPU9250
     {
       int16_t tmp = 0;
       tmp = (int16_t)rawGyro[0];
-      floatGyro[0] = (double)tmp;
+      floatGyro[0] = (float)tmp;
       floatGyro[0] = (floatGyro[0]/32768.0)*250.0;
-      floatGyro[0] = floatGyro[0] - (double)startGyro[0];
+      floatGyro[0] = floatGyro[0] ;//- (float)startGyro[0];
       tmp = (int16_t)rawGyro[1];
-      floatGyro[1] = (double)tmp;
+      floatGyro[1] = (float)tmp;
       floatGyro[1] = (floatGyro[1]/32768.0)*250.0;
-      floatGyro[1] = floatGyro[1] - (double)startGyro[1];
+      floatGyro[1] = floatGyro[1] ; //- (float)startGyro[1];
       tmp = (int16_t)rawGyro[2];
-      floatGyro[2] = (double)tmp;
+      floatGyro[2] = (float)tmp;
       floatGyro[2] = (floatGyro[2]/32768.0)*250.0;
-      floatGyro[2] = floatGyro[2] - (double)startGyro[2];
+      floatGyro[2] = floatGyro[2] ; //- (float)startGyro[2];
     };
 
     void getOffsetAccel()
@@ -226,7 +260,6 @@ class MPU9250
       offsetAccel[2] = read(MPU9250_ACCEL_OFFSET_ZH);
       offsetAccel[2] = offsetAccel[2] << 8;
       offsetAccel[2] = offsetAccel[2] + read(MPU9250_ACCEL_OFFSET_ZL);
-      delay(30);
     };
 
     void setOffsetAccel()
@@ -324,6 +357,7 @@ class MPU9250
         Serial.println(floatAccel[0]);
         Serial.println(floatAccel[1]);
         Serial.println(floatAccel[2]);
+        delay(2000);
       #endif
     };
 
@@ -336,6 +370,7 @@ class MPU9250
         Serial.println(floatGyro[0]);
         Serial.println(floatGyro[1]);
         Serial.println(floatGyro[2]);
+        delay(2000);
       #endif
     };
 
@@ -366,9 +401,9 @@ class MPU9250
         Serial.println(Y);
         Serial.println(Z);
       #endif
-      X = (X /256);
-      Y = (Y /256);
-      Z = (Z /256);
+      X = (X /128);
+      Y = (Y /128);
+      Z = (Z /128);
       #ifdef DEBUG
         this->updateFloatAccel();
         Serial.println("DATA BEFORE CORRECTION:");
@@ -519,7 +554,6 @@ void offsetCorrectionAccel2()
       offsetAccel[2] = offsetAccel[2];
       setOffsetAccel();
       getOffsetAccel();
-      delay(400);
       #ifdef DEBUG
         this->updateFloatAccel();
         Serial.println("DATA AFTER CORRECTION:");
@@ -613,9 +647,7 @@ void offsetCorrectionAccel2()
         offsetGyro[2] = offsetGyro[2] + Zb;
       };
       this->setOffsetGyro();
-      delay(200);
       this->getOffsetGyro();
-      delay(200);
       #ifdef DEBUG
         this->updateFloatGyro();
         Serial.println("DATA AFTER CORRECTION:");
@@ -636,7 +668,7 @@ void offsetCorrectionAccel2()
 
     void startCorrectionAccel()
     {
-      for (int i = 0; i < 128; i++)
+      for (int i = 0; i < 8; i++)
       {
         while(!(isReady())){};
         updateFloatAccel();
@@ -644,9 +676,9 @@ void offsetCorrectionAccel2()
         startAccel[1] = startAccel[1] + floatAccel[1];
         startAccel[2] = startAccel[2] + floatAccel[2];
       };
-      startAccel[0] = -startAccel[0] / 128.0;
-      startAccel[1] = -startAccel[1] / 128.0;
-      startAccel[2] = -startAccel[2] / 128.0;
+      startAccel[0] = startAccel[0] / 8.0;
+      startAccel[1] = startAccel[1] / 8.0;
+      startAccel[2] = startAccel[2] / 8.0;
       #ifdef DEBUG
         Serial.println("START OFFSET CORRECTION:");
         Serial.println(startAccel[0]);
@@ -658,7 +690,7 @@ void offsetCorrectionAccel2()
 
     void startCorrectionGyro()
     {
-      for (int i = 0; i < 128; i++)
+      for (int i = 0; i < 8; i++)
       {
         while(!(isReady())){};
         updateFloatGyro();
@@ -667,20 +699,15 @@ void offsetCorrectionAccel2()
         startGyro[2] = startGyro[2] + floatGyro[2];
         delay(50);
       };
-      startGyro[0] = -startGyro[0] / 128.0;
-      startGyro[1] = -startGyro[1] / 128.0;
-      startGyro[2] = -startGyro[2] / 128.0;
+      startGyro[0] = startGyro[0] / 8.0;
+      startGyro[1] = startGyro[1] / 8.0;
+      startGyro[2] = startGyro[2] / 8.0;
       #ifdef DEBUG
         Serial.println("START OFFSET CORRECTION:");
         Serial.println(startGyro[0]);
         Serial.println(startGyro[1]);
         Serial.println(startGyro[2]);
       #endif
-    };
-
-    void change_config_accel()
-    {
-      this->write(MPU9250_ACCELCNFG_2, 0x0B);
     };
 };
 // ---
@@ -694,26 +721,26 @@ class queue
     int numElement = 0;
     double average = 0.0;
   public:
-    double data[32]; 
+    double data[16]; 
     queue()
     {
-      for (int i = 0; i < 32; i++)
+      for (int i = 0; i < 16; i++)
       {
         data[i] = 0.0;
       };
     };
     bool isFull()
     {
-      return (numElement == 32);
+      return (numElement == 16);
     };
     bool isEmpty()
     {
       return (numElement == 0);
     };
-    void insert(double floatData)
+    void insert(float floatData)
     {
       double tmp = (double) floatData;
-      for (int i = 0; i < 31; i++)
+      for (int i = 0; i < 15; i++)
       {
         data[i + 1] = data[i];
       };
@@ -726,17 +753,17 @@ class queue
     void getAverage()
     {
       average = 0.0;
-      for (int i = 0; i < 32; i++)
+      for (int i = 0; i < 16; i++)
       {
         average += data[i];
       };
-      average = average / 32.0;
+      average = average / 16.0;
     };
-    double returnAverage()
+    float returnAverage()
     {
       if (this->isFull())
       {
-        return (double)this->average;
+        return (float)this->average;
       }
       else
       { 
@@ -750,25 +777,19 @@ class queue
 
 // GENERAL FUNCTION DECLERATION
 // ---
-float applyFIRFilterX(float input);
-float applyFIRFilterY(float input);
+void updateAccelVel();
+void updateAccelLoc();
+void updateGyroLoc();
+float kalmanFilter(float loc, float velocity, float acceleration, float dt);
+float applyFIRFilter(float newSample);
 // ---
-void MahonyAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, float az);
+
 
 
 MPU9250 IMU(I2C_CLOCK_FREQUENCY);
-queue queueAccelX;
-queue queueAccelY;
-queue queueAccelZ;
-queue queueGyroX;
-queue queueGyroY;
-queue queueGyroZ;
-queue queueVelX;
-queue queueVelY;
-queue queueVelZ;
-queue queueLocX;
-queue queueLocY;
-queue queueLocZ;
+queue   queueXaccel;
+queue   queueYaccel;
+queue   queueZaccel;
 void setup() 
 {
   IMU.powerStart();
@@ -793,7 +814,7 @@ void setup()
     Serial.print("ID:");
     Serial.println(IMU.getID(), HEX);
   #endif
-  //IMU.change_config_accel();
+
   IMU.offsetCorrectionAccel();
   delay(200);
   IMU.offsetCorrectionGyro();
@@ -802,166 +823,250 @@ void setup()
   delay(200);
   IMU.startCorrectionGyro();
   delay(200);
+  for (int i = 0; i < 93; i++)
+  {
+    inputSamples[i] = 0.0;
+  };
+  //IMU.disableYZ();
+
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   if (IMU.isReady())
   {
+    PreviousFloatAccel[0] = floatAccel[0];
+    PreviousFloatAccel[1] = floatAccel[1];
+    PreviousFloatAccel[2] = floatAccel[2];
     IMU.updateFloatGyro();
     IMU.updateFloatAccel();
-    queueAccelX.insert(floatAccel[0] - queueAccelX.returnAverage());
-    queueAccelY.insert(floatAccel[1] - queueAccelY.returnAverage());
-    queueAccelZ.insert(floatAccel[2] - queueAccelZ.returnAverage());
-    queueGyroX.insert(floatGyro[0]);
-    queueGyroY.insert(floatGyro[1]);
-    queueGyroZ.insert(floatGyro[2]);
+    updateAccelVel();
+    updateAccelLoc();
+    updateGyroLoc();
     print++;
-    if (queueAccelX.isFull())
-    {
-
-    }
-    if (queueAccelX.isFull())
-    {
-      queueAccelX.getAverage();
-      floatAccelVel[0] -=  queueAccelX.returnAverage() * 0.250;
-      queueVelX.insert(floatAccelVel[0]);
-      queueVelX.getAverage();
-      floatAccelLoc[0] += (queueVelX.returnAverage()) * 0.250;
-      floatAccelVel[0] /= 10; 
-      //Serial.println(queueVelX.returnAverage() - data);
-      //Serial.print("x:");
-      //Serial.println(floatAccelLoc[0]);
-      
-    }
-    if (queueAccelY.isFull())
-    {
-      queueAccelY.getAverage();
-      floatAccelVel[1] -=  queueAccelY.returnAverage() * 0.250;
-      queueVelY.insert(floatAccelVel[1]);
-      queueVelY.getAverage();
-      floatAccelLoc[1] += (queueVelY.returnAverage()) * 0.250; 
-      floatAccelVel[1] /= 10; 
-      //Serial.println(queueVelX.returnAverage() - data);
-      //Serial.print("y:");
-      //Serial.println(floatAccelLoc[1]);
-      
-    }
-    if (queueAccelZ.isFull())
-    {
-      queueAccelZ.getAverage();
-      floatAccelVel[2] -= queueAccelZ.returnAverage() * 0.250;
-    }
-    if (queueGyroX.isFull())
-    {
-      queueGyroX.getAverage();
-      //Serial.print("GX:");
-      if (fabs(queueGyroX.returnAverage()) > 2)
-      {
-        floatGyroLoc[0] += queueGyroX.returnAverage() * 0.0324;
-        //Serial.print("GyroX:");
-        //Serial.println(floatGyroLoc[0]);
-      }
-      else
-      {
-        floatGyroLoc[0] += 0.0;
-      }
-    }
-    if (queueGyroY.isFull())
-    {
-      queueGyroY.getAverage();
-      //Serial.print("GY:");
-      if (fabs(queueGyroY.returnAverage()) > 2)
-      {
-        floatGyroLoc[1] += queueGyroY.returnAverage() * 0.0324;
-        //Serial.print("GyroY:");
-        //Serial.println(floatGyroLoc[1]);
-      }
-      else
-      {
-        floatGyroLoc[1] += 0.0;
-      }
-    }
-    if (queueGyroZ.isFull())
-    {
-      queueGyroZ.getAverage();
-      //Serial.print("GZ:");
-      if (fabs(queueGyroZ.returnAverage()) > 2)
-      {
-        floatGyroLoc[2] += queueGyroZ.returnAverage() * 0.0324;
-        //Serial.print("GyroZ:");
-        //Serial.println(floatGyroLoc[2]);
-      }
-      else
-      {
-        floatGyroLoc[2] += 0.0;
-      }
-    }
-    #ifdef DEBUG
-    Serial.println("DATA:");
-    Serial.print("X:");
-    Serial.println(floatAccel[0]);
-    Serial.print("Y:");
-    Serial.println(floatAccel[1]);
-    Serial.print("Z:");
-    Serial.println(floatAccel[2]);
-    Serial.print("GX:");
-    Serial.println(floatGyro[0]);
-    Serial.print("GY:");
-    Serial.println(floatGyro[1]);
-    Serial.print("GZ:");
-    Serial.println(floatGyro[2]);
-    #endif
-    print++;
-    if (print == 100)
-    {
-      print = 0;
-      Serial.println("LOCATION:");
-      Serial.println((floatAccelLoc[0]));
-      Serial.println((floatAccelLoc[1]));
-      Serial.println("ANGLE:");
-      Serial.println(floatGyroLoc[0]);
-      Serial.println(floatGyroLoc[1]);
-      Serial.println(floatGyroLoc[2]);
-
-    }
+    calib++;
   };
-  delay(25);
-
-}
-
-float applyFIRFilterX(float input) {
-  // Shift buffer
-  bufferX[bufferIndexX] = input;
-  float output = 0.0;
-  
-  // Calculate the filtered output
-  for (int i = 0; i <= FILTER_ORDER; i++) {
-    int index = (bufferIndexX - i + (FILTER_ORDER + 1)) % (FILTER_ORDER + 1);
-    output += coefficients[i] * bufferX[index];
+  if (calib == 1000)
+  {
+    //IMU.offsetCorrectionAccel2();
+  };
+  if (print == 100)
+  {
+    print = 0;
+    Serial.println("DATA:");
+    Serial.println(floatAccelLoc[0]);
+    Serial.println(floatAccelLoc[1]);
+    Serial.println(floatAccelLoc[2]);
+   //Serial.println("ACCELERATION:");
+   //Serial.println("Location:");
+   //Serial.print("X:");
+   //Serial.println(floatAccelLoc[0]);
+   //Serial.print("Y:");
+   //Serial.println(floatAccelLoc[1]);
+   //Serial.print("Z:");
+   //Serial.println(floatAccelLoc[2]);
+   //Serial.println("Filtered Location:");
+   //Serial.print("X:");
+   //Serial.println(FilteredfloatAccelLoc[0]);
+   //Serial.print("Y:");
+   //Serial.println(FilteredfloatAccelLoc[1]);
+   //Serial.print("Z:");
+   //Serial.println(FilteredfloatAccelLoc[2]); 
+   //Serial.println("Second Filtered Location:");
+   //Serial.print("X:");
+   //Serial.println(SecondFilteredfloatAccelLoc[0]);
+   //Serial.print("Y:");
+   //Serial.println(SecondFilteredfloatAccelLoc[1]);
+   //Serial.print("Z:");
+   //Serial.println(SecondFilteredfloatAccelLoc[2]); 
+   //Serial.println("Velocity:");
+   //Serial.print("X:");
+   //Serial.println(queueXaccel.returnAverage());
+   //Serial.print("Y:");
+   //Serial.println(queueYaccel.returnAverage());
+   //Serial.print("Z:");
+   //Serial.println(queueZaccel.returnAverage());
+   //Serial.println("Acceleration:");
+   //Serial.print("X:");
+   //Serial.println(floatAccel[0]);
+   //Serial.print("Y:");
+   //Serial.println(floatAccel[1]);
+   //Serial.print("Z:");
+   //Serial.println(floatAccel[2]);
+   //Serial.println("GYRO");
+   //Serial.println("Location:");
+   //Serial.print("X:");
+   //Serial.println(floatGyroLoc[0]);
+   //Serial.print("Y:");
+   //Serial.println(floatGyroLoc[1]);
+   //Serial.print("Z:");
+   //Serial.println(floatGyroLoc[2]);
+   //Serial.println("Rate:");
+   //Serial.print("X:");
+   //Serial.println(floatGyro[0]);
+   //Serial.print("Y:");
+   //Serial.println(floatGyro[1]);
+   //Serial.print("Z:");
+   //Serial.println(floatGyro[2]);
   }
 
-  // Update buffer index
-  bufferIndexX = (bufferIndexX + 1) % (FILTER_ORDER + 1);
 
-    return output;
 }
-float applyFIRFilterY(float input) {
-  // Shift buffer
-  bufferY[bufferIndexY] = input;
-  float output = 0.0;
-  
-  // Calculate the filtered output
-  for (int i = 0; i <= FILTER_ORDER; i++) {
-    int index = (bufferIndexY - i + (FILTER_ORDER + 1)) % (FILTER_ORDER + 1);
-    output += coefficients[i] * bufferY[index];
+
+
+// GENERAL FUNCTION IMPLEMENTATION
+// ---
+void updateAccelVel()
+{
+    if (fabs(floatAccel[0]) > 0.0)
+    {
+      floatAccelVel[0] += (floatAccel[0] - PreviousFloatAccel[0]) * 0.250;
+    }
+    else
+    {
+      floatAccelVel[0] = 0.0 * 0.250;
+    };
+    if (fabs(floatAccel[1]) > 0.0)
+    {
+      floatAccelVel[1] += (floatAccel[1] - PreviousFloatAccel[1]) * 0.250;
+    }
+    else
+    {
+      floatAccelVel[1] = 0.0 * 0.250;
+    };
+    if (fabs(floatAccel[2]) > 0.0)
+    {
+      floatAccelVel[2] += (floatAccel[2] - PreviousFloatAccel[2]) * 0.250;
+    }
+    else
+    {
+      floatAccelVel[2] = 0.0 * 0.250;
+    };
+    queueXaccel.insert(floatAccelVel[0]);
+    queueYaccel.insert(floatAccelVel[1]);
+    queueZaccel.insert(floatAccelVel[2]);
+    queueXaccel.getAverage();
+    queueYaccel.getAverage();
+    queueZaccel.getAverage();
+};
+
+void updateAccelLoc()
+{
+  floatAccelLoc[0] += 0.250 * queueXaccel.returnAverage();
+  floatAccelLoc[1] += 0.250 * queueYaccel.returnAverage();
+  floatAccelLoc[2] += 0.250 * queueZaccel.returnAverage();
+  FilteredfloatAccelLoc[0] = kalmanFilter(floatAccelLoc[0], queueXaccel.returnAverage(), floatAccel[0], 0.0250);
+  FilteredfloatAccelLoc[1] = kalmanFilter(floatAccelLoc[1], queueYaccel.returnAverage(), floatAccel[1], 0.0250);
+  FilteredfloatAccelLoc[2] = kalmanFilter(floatAccelLoc[2], queueZaccel.returnAverage(), floatAccel[2], 0.0250);
+  SecondFilteredfloatAccelLoc[0] = applyFIRFilter(FilteredfloatAccelLoc[0]);
+  SecondFilteredfloatAccelLoc[1] = applyFIRFilter(FilteredfloatAccelLoc[1]);
+  SecondFilteredfloatAccelLoc[2] = applyFIRFilter(FilteredfloatAccelLoc[2]);
+  #ifdef DEBUG
+    Serial.println("LAST ACCELERATION OUTPUT:");
+    Serial.println("Velocity:");
+    Serial.println(queueXaccel.returnAverage());
+
+    Serial.println(queueYaccel.returnAverage());
+    Serial.println(queueZaccel.returnAverage());
+    Serial.println("Location:");
+    Serial.println(floatAccelLoc[0]);
+    Serial.println(floatAccelLoc[1]);
+    Serial.println(floatAccelLoc[2]);
+    delay(100);
+  #endif 
+};
+
+void updateGyroLoc()
+{
+  if (fabs(floatGyro[0]) > 2)
+  {
+    floatGyroLoc[0] += 0.0270 * floatGyro[0];
+  };
+
+  if (fabs(floatGyro[1]) > 2)
+  {
+    floatGyroLoc[1] += 0.0270 * floatGyro[1];
+  };
+
+  if (fabs(floatGyro[2]) > 2)
+  {
+    floatGyroLoc[2] += 0.0270 * floatGyro[2];
+  };
+  #ifdef DEBUG
+    Serial.println("LAST GYRO OUTPUT:");
+    Serial.println("Location:");
+    Serial.println(floatGyroLoc[0]);
+    Serial.println(floatGyroLoc[1]);
+    Serial.println(floatGyroLoc[2]);
+    delay(100);
+  #endif   
+};
+
+
+// Kalman filter function to update location based on acceleration
+float kalmanFilter(float loc, float velocity, float acceleration, float dt) {
+  // Kalman filter variables
+  static float P[2][2] = {{1, 0}, {0, 1}}; // Covariance matrix
+  static float Q[2][2] = {{0.001, 0}, {0, 0.001}}; // Process noise covariance
+  static float R = 0.5;  // Measurement noise covariance
+  static float K[2];  // Kalman gain
+  static float x[2] = {0, 0}; // Initial state [position, velocity]
+
+  // Initialize the state with the current values if it's the first time
+  if (x[0] == 0 && x[1] == 0) {
+    x[0] = loc;  // Set initial location
+    x[1] = velocity;  // Set initial velocity
   }
 
-  // Update buffer index
-  bufferIndexY = (bufferIndexY + 1) % (FILTER_ORDER + 1);
+  // Prediction Step
+  // State transition: position = position + velocity * dt, velocity = velocity + acceleration * dt
+  x[0] = loc + velocity * dt;  // Update position prediction
+  x[1] = velocity + acceleration * dt;  // Update velocity prediction
 
-  return output;
+  // Covariance prediction
+  P[0][0] = P[0][0] + dt * (P[0][1] + P[1][0]) + Q[0][0];
+  P[0][1] = P[0][1] + dt * P[1][1];
+  P[1][0] = P[1][0] + dt * P[1][1];
+  P[1][1] = P[1][1] + Q[1][1];
+
+  // Measurement Step (correct the position/velocity based on noisy acceleration)
+  // Compute Kalman Gain
+  float S = P[0][0] + R;
+  K[0] = P[0][0] / S;
+  K[1] = P[1][0] / S;
+
+  // Update state estimate
+  float z = acceleration;  // Measured acceleration (using this as the measurement)
+  float y = z - x[1];  // Measurement residual (difference between predicted and actual)
+
+  x[0] = x[0] + K[0] * y;  // Update position estimate
+  x[1] = x[1] + K[1] * y;  // Update velocity estimate
+
+  // Update covariance matrix
+  P[0][0] = P[0][0] - K[0] * P[0][0];
+  P[0][1] = P[0][1] - K[0] * P[0][1];
+  P[1][0] = P[1][0] - K[1] * P[0][0];
+  P[1][1] = P[1][1] - K[1] * P[0][1];
+
+  // Return the updated position (loc)
+  return x[0];
+};
+
+float applyFIRFilter(float newSample) {
+  // Shift the samples to make space for the new sample
+  for (int i = 93 - 1; i > 0; i--) {
+    inputSamples[i] = inputSamples[i - 1];
+  }
+  inputSamples[0] = newSample;  // Store the new sample
+  
+  // Apply the FIR filter
+  float filteredOutput = 0.0;
+  for (int i = 0; i < 93; i++) {
+    filteredOutput += filterCoefficients[i] * inputSamples[i];
+  }
+  
+  // Return the filtered value
+  return filteredOutput;
 }
-
 
 // ---
