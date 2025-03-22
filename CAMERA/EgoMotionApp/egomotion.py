@@ -17,7 +17,7 @@ class EgoMotion:
     EgoMotion class
 
     ----Class Variables----
-    Rpose: Current cumulative rotation matrix from origin
+    Rpose: Current cumulative rotation quarternion from origin
     Tpose: Current translation vector from origin
 
     cam: Camera object
@@ -45,25 +45,25 @@ class EgoMotion:
     current_rotation(): Return current rotation
     """
 
-    def __init__(self, t=np.zeros(shape=(3, 1)), r=np.eye(3),
+    def __init__(self, t=np.zeros(shape=(3)), r=np.eye(3),
                  capdev=0, framewidth=1280, frameheight=720, fps=15, calibFile="calibration.calib"):
         """
         EgoMotion constructor
         :param t: initial translation vector
-        :param r: initial rotation matrix
+        :param r: initial rotation quarternion
         :param capdev: capture device
         :param framewidth: frame width
         :param frameheight: frame height
         :param fps: fps
         :param calibFile: path to calibration file
         """
-        self.Rpose = r
+        self.Rpose = Rotation.from_matrix(r)
         self.Tpose = t
 
         if platform == "linux" or platform == "linux2":
             self.cam = cv2.VideoCapture(capdev, cv2.CAP_V4L2)
         else:
-            self.cam = cv2.VideoCapture(capdev)
+            self.cam = cv2.VideoCapture(capdev, cv2.CAP_DSHOW)
         self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, framewidth)
         self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, frameheight)
         self.cam.set(cv2.CAP_PROP_FPS, fps)
@@ -124,11 +124,14 @@ class EgoMotion:
             if not np.isnan(E).any() and E.size == 9:
                 _, R, t, _ = cv2.recoverPose(E, self.good_p0, self.good_p1, self.mtx)
 
-                Rmag = abs(Rotation.from_matrix(R).as_euler('xyz', degrees=True))
+                R = Rotation.from_matrix(R)
+                t = np.reshape(t, (3))
+
+                Rmag = abs(R.as_euler('xyz', degrees=True))
                 if Rmag.max() < 20:  # Rotation Threshold
                     if abs(t).max() > 0.5:
-                        self.Tpose = self.Tpose + np.linalg.inv(self.Rpose) @ t
-                    self.Rpose = R @ self.Rpose
+                        self.Tpose = self.Tpose + self.Rpose.inv().apply(t)
+                    self.Rpose = R * self.Rpose
 
         if drawpoints:
             for i in range(len(self.good_p0)):
@@ -154,9 +157,9 @@ class EgoMotion:
         :return: Rotation matrix or rotation angles
         """
         if asMatrix:
-            return self.Rpose
+            return self.Rpose.as_matrix()
         else:
-            return Rotation.from_matrix(self.Rpose).as_euler('xyz', degrees=True)
+            return self.Rpose.as_euler('xyz', degrees=True)
 
     def release_cam(self):
         """

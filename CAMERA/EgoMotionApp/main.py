@@ -17,7 +17,7 @@ def input_thread():
 
 
 if __name__ == '__main__':
-    # Initialise EgoMotion
+    # Initialise EgoMotionY
     egomotion = EgoMotion(fps=30, calibFile="calibration_logi.calib")
 
     tdata = []
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         ret = egomotion.optical_flow()
 
         if ret:
-            egomotion.calculate_egomotion(drawpoints=False, showtR=False)
+            egomotion.calculate_egomotion(drawpoints=True, showtR=False)
 
         td = egomotion.current_location()
         Rd = egomotion.current_rotation()
@@ -59,7 +59,7 @@ if __name__ == '__main__':
         tdata.append(td)
         Rdata.append(Rd)
 
-        print(f"X\t{td[0][0]:.4f}\t\tY\t{td[1][0]:.4f}\t\tZ\t{td[2][0]:.4f}\nPIT\t{Rd[0]:.4f}\t\tYAW\t{Rd[1]:.4f}\t\tROL\t{Rd[2]:.4f}")
+        print(f"X\t{td[0]:.4f}\t\tY\t{td[1]:.4f}\t\tZ\t{td[2]:.4f}\nPIT\t{Rd[0]:.4f}\t\tYAW\t{Rd[1]:.4f}\t\tROL\t{Rd[2]:.4f}")
 
     cv2.destroyAllWindows()
     egomotion.release_cam()
