@@ -4,36 +4,41 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cfaba5a6-dc32-4db4-9a37-c855a70eb196" name="Changes" comment="Quarternion based rotations">
-      <change afterPath="$PROJECT_DIR$/outputs/03Jan2025_05.31.38.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_07.59.32.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.00.59.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.03.54.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.06.34.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.07.48.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.09.11.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.11.07.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.12.51.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.13.52.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.15.50.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.16.55.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.29.10.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.30.13.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.32.55.csv" afterDir="false" />
+    <list default="true" id="cfaba5a6-dc32-4db4-9a37-c855a70eb196" name="Changes" comment="Stereo code">
+      <change afterPath="$PROJECT_DIR$/stereoscaler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/EgoMotionApp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/EgoMotionApp.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/14Dec2024_20.23.42.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/14Dec2024_23.40.25.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/14Dec2024_23.44.25.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../SENSOR/stm32/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../SENSOR/stm32/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/egomotion.py" beforeDir="false" afterPath="$PROJECT_DIR$/egomotion.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "ashharadnan"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/METUOBSERVR/obserVR",
+    "accountId": "8dec9212-b65a-4810-a171-5aab9ee4cabb"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
@@ -60,6 +65,39 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
+    <layout>
+      <window_info id="Bookmarks" show_stripe_button="false" side_tool="true" />
+      <window_info id="Merge Requests" show_stripe_button="false" />
+      <window_info id="Commit_Guest" show_stripe_button="false" />
+      <window_info id="Pull Requests" show_stripe_button="false" />
+      <window_info id="Learn" show_stripe_button="false" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3298828" />
+      <window_info id="Commit" order="1" weight="0.3298828" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
+      <window_info anchor="bottom" id="TypeScript" show_stripe_button="false" />
+      <window_info anchor="bottom" id="TODO" show_stripe_button="false" />
+      <window_info anchor="bottom" id="File Transfer" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="0" weight="0.32974288" />
+      <window_info anchor="bottom" id="Problems" order="1" />
+      <window_info anchor="bottom" id="Problems View" order="2" weight="0.32974288" />
+      <window_info anchor="bottom" id="Terminal" order="3" weight="0.32974288" />
+      <window_info anchor="bottom" id="Services" order="4" weight="0.32974288" />
+      <window_info anchor="bottom" id="Python Packages" order="5" weight="0.32974288" />
+      <window_info anchor="bottom" id="Python Console" order="6" weight="0.1" />
+      <window_info active="true" anchor="bottom" id="Run" order="6" visible="true" weight="0.32974288" />
+      <window_info anchor="right" id="Endpoints" show_stripe_button="false" />
+      <window_info anchor="right" id="Coverage" show_stripe_button="false" side_tool="true" />
+      <window_info anchor="right" id="SciView" show_stripe_button="false" />
+      <window_info anchor="right" content_ui="combo" id="Notifications" order="0" weight="0.25" />
+      <window_info anchor="right" id="AIAssistant" order="1" weight="0.25" />
+      <window_info anchor="right" id="Database" order="2" weight="0.25" />
+      <window_info anchor="right" id="Gradle" order="3" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="4" weight="0.25" />
+      <window_info anchor="right" id="Plots" order="5" weight="0.1" />
+    </layout>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -105,10 +143,11 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Quarternion based rotations" />
-    <option name="LAST_COMMIT_MESSAGE" value="Quarternion based rotations" />
+    <MESSAGE value="Stereo code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Stereo code" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/EgoMotionApp$main.coverage" NAME="main Coverage Results" MODIFIED="1742610152531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/EgoMotionApp$egomotion.coverage" NAME="egomotion Coverage Results" MODIFIED="1742609867583" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/EgoMotionApp$main.coverage" NAME="main Coverage Results" MODIFIED="1743861549847" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/EgoMotionApp$egomotion.coverage" NAME="egomotion Coverage Results" MODIFIED="1743861166398" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -24,7 +24,7 @@ if __name__ == '__main__':
     t = []
 
     # Ensure frames are in the buffer
-    while egomotion.f0 is None:
+    while egomotion.f0 is None or egomotion.fc0 is None:
         egomotion.update_frames()
 
     t0 = time.time()
@@ -57,15 +57,17 @@ if __name__ == '__main__':
         t.append(time.time() - t0)
         tdata.append(td)
         Rdata.append(Rd)
-        cv2.imshow('R', egomotion.frame)
-        cv2.waitKey(1)
-        print(f"X\t{td[0][0]:.4f}\t\tY\t{td[1][0]:.4f}\t\tZ\t{td[2][0]:.4f}\tPIT\t{Rd[0]:.4f}\t\tYAW\t{Rd[1]:.4f}\t\tROL\t{Rd[2]:.4f}")
+        #cv2.imshow('R', egomotion.frame)
+        #cv2.waitKey(1)
+        print(f"X\t{td[0]:.4f}\t\tY\t{td[1]:.4f}\t\tZ\t{td[2]:.4f}\tPIT\t{Rd[0]:.4f}\t\tYAW\t{Rd[1]:.4f}\t\tROL\t{Rd[2]:.4f}")
 
     cv2.destroyAllWindows()
     egomotion.release_cam()
 
-    tdata = np.hstack(tdata).transpose()
+
+    tdata = np.vstack(tdata)
     Rdata = np.vstack(Rdata)
+
     df = pd.DataFrame(
         {"t": t, 'x': tdata[:, 0], 'y': tdata[:, 1], 'z': tdata[:, 2], 'pitch': Rdata[:, 0], 'yaw': Rdata[:, 1],
          'roll': Rdata[:, 2]})
