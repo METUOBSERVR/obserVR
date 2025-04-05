@@ -11,6 +11,10 @@ from scipy.spatial.transform import Rotation
 from pickle import dump, load
 from sys import platform
 
+if platform == "linux" or platform == "linux2":
+    from picamera2 import Picamera2
+    from libcamera import controls
+
 
 class EgoMotion:
     """
@@ -61,12 +65,17 @@ class EgoMotion:
         self.Tpose = t
 
         if platform == "linux" or platform == "linux2":
-            self.cam = cv2.VideoCapture(capdev, cv2.CAP_V4L2)
+            self.cams = (Picamera2(0), Picamera2(1))
+            for cam in self.cams:
+                config = cam.create_video_configuration(controls={'FrameRate': 120, "AfMode":controls.AfModeEnum.Manual, "LensPosition":1.1},
+                main={'format':'XRGB8888', 'size': (480, 640)}, raw={'format':'SRGGB10_CSI2P', 'size': (1536, 864)})
+                cam.configure(config)
+                cam.start("video")
         else:
             self.cam = cv2.VideoCapture(capdev)
-        self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, framewidth)
-        self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, frameheight)
-        self.cam.set(cv2.CAP_PROP_FPS, fps)
+            self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, framewidth)
+            self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, frameheight)
+            self.cam.set(cv2.CAP_PROP_FPS, fps)
 
         with open(calibFile, 'rb') as f:
             self.mtx, self.dist = load(f)
@@ -82,7 +91,7 @@ class EgoMotion:
                               maxLevel=10,
                               criteria=(cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
-        self.fast = cv2.FastFeatureDetector_create(threshold=5, nonmaxSuppression=True)
+        self.fast = cv2.FastFeatureDetector_create(threshold=10, nonmaxSuppression=True)
 
     def update_frames(self):
         """
@@ -90,9 +99,9 @@ class EgoMotion:
         :return: None
         """
         self.f0 = deepcopy(self.f1)
-        ret, self.frame = self.cam.read()
+        self.frame = self.cams[0].capture_array()
+        self.frame = cv2.rotate(self.frame, cv2.ROTATE_90_CLOCKWISE)
         self.f1 = cv2.cvtColor(self.frame, cv2.COLOR_RGB2GRAY)
-
     def optical_flow(self):
         """
         One step of optical flow calculation
@@ -163,21 +172,11 @@ class EgoMotion:
         Releases camera
         :return:
         """
-        self.cam.release()
-
-    def init_cam(self, capdev = 0, framewidth = 1280, frameheight = 720, fps = 15):
-        """
-        Initializes camera
-        :param capdev: capture device
-        :param framewidth: frame width
-        :param frameheight: frame height
-        :param fps: fps
-        :return: None
-        """
-        self.cam = cv2.VideoCapture(capdev)
-        self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, framewidth)
-        self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, frameheight)
-        self.cam.set(cv2.CAP_PROP_FPS, fps)
+        if platform == "linux" or platform == "linux2":
+            for cam in self.cams:
+                cam.stop()
+        else:
+            self.cam.release()
 
     def load_calibration(self, calibFile="calibration.calib"):
         """
