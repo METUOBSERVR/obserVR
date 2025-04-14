@@ -4,42 +4,53 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cb977395-33cf-48ba-9e29-08410880ef05" name="Changes" comment="Added start/stop interface, added video stream selection based on OS, interface now also outputs the localisation values in the terminal" />
+    <list default="true" id="cfaba5a6-dc32-4db4-9a37-c855a70eb196" name="Changes" comment="Quarternion based rotations">
+      <change afterPath="$PROJECT_DIR$/outputs/03Jan2025_05.31.38.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_07.59.32.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.00.59.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.03.54.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.06.34.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.07.48.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.09.11.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.11.07.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.12.51.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.13.52.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.15.50.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.16.55.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.29.10.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.30.13.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/outputs/18Dec2024_08.32.55.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/14Dec2024_20.23.42.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/14Dec2024_23.40.25.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/14Dec2024_23.44.25.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SENSOR/stm32/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../SENSOR/stm32/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
 }</component>
-  <component name="ProjectId" id="2qCwRj5GmCi8TBXs2x1eJHQjxvE" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectId" id="2ueTerVu436eu4NBtt3IAQQmVyo" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;Python.egomotion.executor&quot;: &quot;Run&quot;,
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Apps/anaconda3/condabin/conda.bat&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -49,72 +60,33 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Ongoing\obserVR\CAMERA\EgoMotionApp" />
-    </key>
-  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-PY-241.14494.241" />
-        <option value="bundled-python-sdk-0509580d9d50-28c9f5db9ffe-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.14494.241" />
+        <option value="bundled-python-sdk-09665e90c3a7-b11f5e8da5ad-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.15026.15" />
       </set>
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="cb977395-33cf-48ba-9e29-08410880ef05" name="Changes" comment="" />
-      <created>1734179858760</created>
+      <changelist id="cfaba5a6-dc32-4db4-9a37-c855a70eb196" name="Changes" comment="" />
+      <created>1742608140312</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1734179858760</updated>
-      <workItem from="1734179861556" duration="11553000" />
-      <workItem from="1734208385531" duration="976000" />
-      <workItem from="1734210048019" duration="93000" />
+      <updated>1742608140312</updated>
+      <workItem from="1742608142528" duration="645000" />
+      <workItem from="1742608805839" duration="1623000" />
     </task>
-    <task id="LOCAL-00001" summary="Application structure made">
+    <task id="LOCAL-00001" summary="Quarternion based rotations">
       <option name="closed" value="true" />
-      <created>1734185653040</created>
+      <created>1742610279662</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1734185653040</updated>
+      <updated>1742610279662</updated>
     </task>
-    <task id="LOCAL-00002" summary="Application structure made">
-      <option name="closed" value="true" />
-      <created>1734191377927</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1734191377927</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Fixed problem with camera device">
-      <option name="closed" value="true" />
-      <created>1734197666834</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1734197666834</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Added start/stop interface, added video stream selection based on OS, interface now also outputs the localisation values in the terminal">
-      <option name="closed" value="true" />
-      <created>1734209342698</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1734209342698</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Added start/stop interface, added video stream selection based on OS, interface now also outputs the localisation values in the terminal">
-      <option name="closed" value="true" />
-      <created>1734210058944</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1734210058944</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -132,14 +104,11 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Application structure made" />
-    <MESSAGE value="Fixed problem with camera device" />
-    <MESSAGE value="Added start/stop interface, added video stream selection based on OS, interface now also outputs the localisation values in the terminal" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added start/stop interface, added video stream selection based on OS, interface now also outputs the localisation values in the terminal" />
+    <MESSAGE value="Quarternion based rotations" />
+    <option name="LAST_COMMIT_MESSAGE" value="Quarternion based rotations" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/EgoMotionApp$main.coverage" NAME="main Coverage Results" MODIFIED="1734208987749" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/EgoMotionApp$egomotion.coverage" NAME="egomotion Coverage Results" MODIFIED="1734179884857" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/EgoMotionApp$main.coverage" NAME="main Coverage Results" MODIFIED="1742610152531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/EgoMotionApp$egomotion.coverage" NAME="egomotion Coverage Results" MODIFIED="1742609867583" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
