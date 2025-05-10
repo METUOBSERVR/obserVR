@@ -6,14 +6,26 @@
   <component name="ChangeListManager">
     <list default="true" id="cfaba5a6-dc32-4db4-9a37-c855a70eb196" name="Changes" comment="stereo code">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calibrationStereo.calib" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/egomotion.py" beforeDir="false" afterPath="$PROJECT_DIR$/egomotion.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stereoscaler.py" beforeDir="false" afterPath="$PROJECT_DIR$/stereoscaler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FUSION/obRasp/egomotion.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../FUSION/obRasp/egomotion.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FUSION/obRasp/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../FUSION/obRasp/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../FUSION/obRasp/stereoscaler.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../FUSION/obRasp/stereoscaler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -96,7 +108,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-09665e90c3a7-b11f5e8da5ad-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.15026.15" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.18034.53" />
+        <option value="bundled-python-sdk-13a8072ce35e-2767605e8bc2-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.18034.53" />
       </set>
     </attachedChunks>
   </component>
@@ -114,6 +127,7 @@
       <workItem from="1746867535046" duration="690000" />
       <workItem from="1747013692133" duration="1273000" />
       <workItem from="1746867535046" duration="830000" />
+      <workItem from="1746877531810" duration="2336000" />
     </task>
     <task id="LOCAL-00001" summary="Quarternion based rotations">
       <option name="closed" value="true" />

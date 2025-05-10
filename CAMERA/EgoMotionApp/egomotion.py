@@ -117,7 +117,7 @@ class EgoMotion:
                               maxLevel=10,
                               criteria=(cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
-        self.fast = cv2.FastFeatureDetector_create(threshold=30, nonmaxSuppression=True)
+        self.fast = cv2.FastFeatureDetector_create(threshold=20, nonmaxSuppression=True)
 
     def update_frames(self):
         """

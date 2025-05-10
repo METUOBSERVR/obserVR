@@ -105,10 +105,10 @@ class EgoMotion:
             
         # Calculate disparity maps
         self.mapLx, self.mapLy, self.mapRx, self.mapRy, self.Q = compute_maps(self.f0, self.fc0, self.K1, self.K2, self.D1, self.D2, self.calibR, self.calibT)
-        self.stereo = create_SGBM()
+        self.stereoLeft, self.stereoRight, self.wls_filter = create_SGBM()
                 
         # Calculate First Disparity
-        self.disp0 = calc_disparity(self.f0, self.fc0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.stereo)
+        self.disp0 = calc_disparity(self.f0, self.fc0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.stereoLeft, self.stereoRight, self.wls_filter)
 
         self.good_p0 = np.empty((0, 2), dtype=np.float32)
         self.good_p1 = np.empty((0, 2), dtype=np.float32)
@@ -117,7 +117,7 @@ class EgoMotion:
                               maxLevel=10,
                               criteria=(cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
-        self.fast = cv2.FastFeatureDetector_create(threshold=30, nonmaxSuppression=True)
+        self.fast = cv2.FastFeatureDetector_create(threshold=20, nonmaxSuppression=True)
 
     def update_frames(self):
         """
@@ -166,7 +166,7 @@ class EgoMotion:
 
         dzpipe0, dzpipe = Pipe()
         disppipe0, disppipe = Pipe()
-        stereoProc = Process(target=stereo_scaler, args=(self.f1, self.fc1, self.disp0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.f, self.B, self.Q, dzpipe, disppipe, self.stereo))
+        stereoProc = Process(target=stereo_scaler, args=(self.f1, self.fc1, self.disp0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.f, self.B, self.Q, dzpipe, disppipe, self.stereoLeft, self.stereoRight, self.wls_filter))
         stereoProc.start()
 
         E, _ = cv2.findEssentialMat(self.good_p1, self.good_p0, self.mtx, cv2.RANSAC, 0.999, 1.0, None)

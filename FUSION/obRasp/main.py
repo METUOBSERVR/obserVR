@@ -36,7 +36,7 @@ Fs = 100  # Hz
 dt = 1 / Fs
 decay_tau = 0.3
 decay_alpha = np.exp(-1 / (decay_tau * Fs))
-a = 0.2  # Complement weight for IMU velocity
+a = 0.75  # Complement weight for IMU velocity
 
 # Data buffers
 N = 1000
@@ -89,7 +89,7 @@ while not endFlag:
     imu_roll  = imu_data["eulerR"]
     imu_pitch = imu_data["eulerP"]
     
-    egomotion.R = 
+    egomotion.Rpose = Rotation.from_euler( 'zxy', [imu_roll, imu_pitch, imu_yaw],degrees=True)
 
     rotation.append(np.array([imu_yaw, imu_roll, imu_pitch]))
 
@@ -116,7 +116,10 @@ while not endFlag:
     # --- EKF ---
     ekf.predict()
     ekf.update(pos_cam[i+1], vel_fused)
-    estimated_pos.append(ekf.get_state())
+    new_pos = ekf.get_state()
+    estimated_pos.append(new_pos)
+
+    egomotion.Tpose = new_pos.reshape((1,3))
 
     print(f"estimated:{estimated_pos[i+1]}")
     
@@ -142,7 +145,7 @@ df = pd.DataFrame(
          'pitch': rotation[:, 2]}
          )
 
-printf(df)
+print(df)
 
 fname = datetime.datetime.now().strftime("outputs/%d%b%Y_%H.%M.%S.csv")
 df.to_csv(fname, index=False)
