@@ -6,7 +6,7 @@ Written by Ashhar Adnan
 
 import cv2
 import numpy as np
-from stereoscaler import stereo_scaler
+from stereoscaler import *
 from copy import deepcopy
 from scipy.spatial.transform import Rotation
 from pickle import dump, load
@@ -30,6 +30,9 @@ class EgoMotion:
     cam: Camera object
     mtx: Camera calibration matrix
     dist: Camera distortion coefficients
+    
+    mapRx, mapLx: Undistort maps for x axis
+    mapRy, mapLy: Undistort maps for y axis
 
     f0: Previous frame (GREY)
     f1: Current frame (GREY)
@@ -71,6 +74,7 @@ class EgoMotion:
         """
         self.Rpose = Rotation.from_matrix(r)
         self.Tpose = t
+        
 
         if platform == "linux" or platform == "linux2":
             self.cams = (Picamera2(0), Picamera2(1))
@@ -85,8 +89,7 @@ class EgoMotion:
             self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, frameheight)
             self.cam.set(cv2.CAP_PROP_FPS, fps)
 
-        with open(calibFile, 'rb') as f:
-            self.mtx, self.dist = load(f)
+        self.load_calibration(calibFile)
 
         self.f0 = None
         self.f1 = None
@@ -95,6 +98,16 @@ class EgoMotion:
         self.fc0 = None
         self.fc1 = None
         self.framec = None
+        
+        # Ensure frames are in the buffer
+        while self.f0 is None or self.fc0 is None:
+            self.update_frames()
+            
+        # Calculate disparity maps
+        self.mapLx, self.mapLy, self.mapRx, self.mapRy = compute_maps(self.f0, self.fc0, self.K1, self.K2, self.D1, self.D2, self.calibR, self.calibT)
+            
+        # Calculate First Disparity
+        self.disp0 = calc_disparity(self.f0, self.fc0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.f, self.B)
 
         self.good_p0 = np.empty((0, 2), dtype=np.float32)
         self.good_p1 = np.empty((0, 2), dtype=np.float32)
@@ -151,7 +164,7 @@ class EgoMotion:
 
         dzpipe0, dzpipe = Pipe()
         disppipe0, disppipe = Pipe()
-        stereoProc = Process(target=stereo_scaler, args=(f1, fc1, disp0, K1, K2, D1, D2, R, T, f, B, dzpipe, disppipe))
+        stereoProc = Process(target=stereo_scaler, args=(self.f1, self.f1, self.disp0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.f, self.B, dzpipe, disppipe))
         stereoProc.start()
 
         E, _ = cv2.findEssentialMat(self.good_p1, self.good_p0, self.mtx, cv2.RANSAC, 0.999, 1.0, None)
@@ -161,19 +174,15 @@ class EgoMotion:
 
                 R = Rotation.from_matrix(R)
                 t = np.reshape(t, (3))
-            else:
-                R = Rotation.from_matrix(np.eye(3))
-                t = np.zeros(shape=(3))
-        else:
-            R = Rotation.from_matrix(np.eye(3))
-            t = np.zeros(shape=(3))
 
         dz = dzpipe0.recv()
-        disp0 = deepcopy(disppipe0.recv())
+        self.disp0 = deepcopy(disppipe0.recv())
         stereoProc.join()
-
+        
+        print(dz)
+        
         t_hat = t / np.linalg.norm(t)
-        t = (dz/t_hat[3])*(t_hat)
+        t = (dz/t_hat[2])*(t_hat)
 
         Rmag = abs(R.as_euler('xyz', degrees=True))
         if Rmag.max() < 20:  # Rotation Threshold
@@ -228,3 +237,11 @@ class EgoMotion:
         """
         with open(calibFile, 'rb') as f:
             self.mtx, self.dist = load(f)
+        
+        self.K1, self.K2 = (self.mtx, self.mtx)
+        self.D1, self.D2 = (self.dist, self.dist)
+        self.f = 1.4e3
+        self.calibR = np.eye(3)
+        self.B = 12
+        self.calibT = np.array([self.B / 1000.0, 0.0, 0.0], dtype=float)
+        

@@ -23,10 +23,6 @@ if __name__ == '__main__':
     Rdata = []
     t = []
 
-    # Ensure frames are in the buffer
-    while egomotion.f0 is None or egomotion.fc0 is None:
-        egomotion.update_frames()
-
     t0 = time.time()
     t.append(time.time() - t0)
     tdata.append(egomotion.current_location())
@@ -49,7 +45,7 @@ if __name__ == '__main__':
         ret = egomotion.optical_flow()
 
         if ret:
-            egomotion.calculate_egomotion(drawpoints=True, showtR=False)
+            egomotion.calculate_egomotion(drawpoints=False, showtR=False)
 
         td = egomotion.current_location()
         Rd = egomotion.current_rotation()
