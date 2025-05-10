@@ -61,7 +61,7 @@ class EgoMotion:
     """
 
     def __init__(self, t=np.zeros(shape=(3)), r=np.eye(3),
-                 capdev=0, framewidth=1280, frameheight=720, fps=15, calibFile="calibration.calib"):
+                 capdev=0, framewidth=640, frameheight=480, fps=120, calibFile="calibration.calib"):
         """
         EgoMotion constructor
         :param t: initial translation vector
@@ -80,9 +80,9 @@ class EgoMotion:
             self.cams = (Picamera2(0), Picamera2(1))
             for cam in self.cams:
                 config = cam.create_video_configuration(controls={'FrameRate': 120, "AfMode":controls.AfModeEnum.Manual, "LensPosition":1.1},
-                main={'format':'XRGB8888', 'size': (480, 640)}, raw={'format':'SRGGB10_CSI2P', 'size': (1536, 864)})
+                main={'format':'XRGB8888', 'size': (framewidth, frameheight)}, raw={'format':'SRGGB10_CSI2P', 'size': (1536, 864)})
                 cam.configure(config)
-                cam.start("video")
+                cam.start("main")
         else:
             self.cam = cv2.VideoCapture(capdev)
             self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, framewidth)
@@ -105,9 +105,10 @@ class EgoMotion:
             
         # Calculate disparity maps
         self.mapLx, self.mapLy, self.mapRx, self.mapRy = compute_maps(self.f0, self.fc0, self.K1, self.K2, self.D1, self.D2, self.calibR, self.calibT)
-            
+        self.stereo = create_SGBM()
+                
         # Calculate First Disparity
-        self.disp0 = calc_disparity(self.f0, self.fc0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.f, self.B)
+        self.disp0 = calc_disparity(self.f0, self.fc0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.f, self.B, self.stereo)
 
         self.good_p0 = np.empty((0, 2), dtype=np.float32)
         self.good_p1 = np.empty((0, 2), dtype=np.float32)
@@ -116,7 +117,7 @@ class EgoMotion:
                               maxLevel=10,
                               criteria=(cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
-        self.fast = cv2.FastFeatureDetector_create(threshold=10, nonmaxSuppression=True)
+        self.fast = cv2.FastFeatureDetector_create(threshold=30, nonmaxSuppression=True)
 
     def update_frames(self):
         """
@@ -141,6 +142,7 @@ class EgoMotion:
         Detects features from previous frame and updates current frame if needed
         :return: True if features are detected else False
         """
+        
         p0 = self.fast.detect(self.f0)
         p0 = np.array([x.pt for x in p0], dtype=np.float32).reshape(-1, 1, 2)
 
@@ -164,7 +166,7 @@ class EgoMotion:
 
         dzpipe0, dzpipe = Pipe()
         disppipe0, disppipe = Pipe()
-        stereoProc = Process(target=stereo_scaler, args=(self.f1, self.f1, self.disp0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.f, self.B, dzpipe, disppipe))
+        stereoProc = Process(target=stereo_scaler, args=(self.f1, self.fc1, self.disp0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.f, self.B, dzpipe, disppipe, self.stereo))
         stereoProc.start()
 
         E, _ = cv2.findEssentialMat(self.good_p1, self.good_p0, self.mtx, cv2.RANSAC, 0.999, 1.0, None)
@@ -174,15 +176,20 @@ class EgoMotion:
 
                 R = Rotation.from_matrix(R)
                 t = np.reshape(t, (3))
+            else:
+                t=np.zeros(shape=(3))
+                R = Rotation.from_matrix(np.eye(3))
+        else:
+            t=np.zeros(shape=(3))
+            R = Rotation.from_matrix(np.eye(3))
 
         dz = dzpipe0.recv()
         self.disp0 = deepcopy(disppipe0.recv())
         stereoProc.join()
         
-        print(dz)
-        
-        t_hat = t / np.linalg.norm(t)
-        t = (dz/t_hat[2])*(t_hat)
+        t_hat = t
+        if (t[2] != 0):
+            t = (dz/t_hat[2])*(t_hat)
 
         Rmag = abs(R.as_euler('xyz', degrees=True))
         if Rmag.max() < 20:  # Rotation Threshold
