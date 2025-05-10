@@ -11,16 +11,17 @@ import IMU
 import threading
 import _thread
 import multiprocessing
+from scipy.spatial.transform import Rotation
 
 import socket
 import struct
 
-
+"""
 # Setup TCP socket
 TCP_IP = "10.137.77.167"   # Replace with your Windows PC IP
 TCP_PORT = 9000
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect((TCP_IP, TCP_PORT))
+sock.connect((TCP_IP, TCP_PORT))"""
 
 
 def input_thread():
@@ -44,7 +45,7 @@ N = 1000
 vx, vy, vz = 0.0, 0.0, 0.0
 
 # initialaze egomotion
-egomotion = EgoMotion(framewidth=640, frameheight=480, fps=120, calibFile="calibration_logi.calib")
+egomotion = EgoMotion(framewidth=640, frameheight=480, fps=120, calibFile="calibrationStereo.calib")
 
 # Initialize IMU
 imu = IMU.BNO055Observer()
@@ -87,6 +88,8 @@ while not endFlag:
     imu_yaw   = imu_data["eulerH"] 
     imu_roll  = imu_data["eulerR"]
     imu_pitch = imu_data["eulerP"]
+    
+    egomotion.R = 
 
     rotation.append(np.array([imu_yaw, imu_roll, imu_pitch]))
 
@@ -97,6 +100,8 @@ while not endFlag:
 
     if ret:
         egomotion.calculate_egomotion(drawpoints=True, showtR=False)
+        
+    dt = time.time() - t_start
 
     pos_cam.append(egomotion.current_location().reshape(3))
     vel_cam = (pos_cam[i+1] - pos_cam[i])/dt
@@ -113,16 +118,16 @@ while not endFlag:
     ekf.update(pos_cam[i+1], vel_fused)
     estimated_pos.append(ekf.get_state())
 
-    #print(f"estimated:{estimated_pos[i+1]}")
+    print(f"estimated:{estimated_pos[i+1]}")
     
     x, y, z = (estimated_pos[i+1][0],estimated_pos[i+1][1],estimated_pos[i+1][2])
     packet = struct.pack('dfff', t_start, x, y, z)  # d=double, fff=3 floats
-    sock.sendall(packet)
+    #sock.sendall(packet)
     
     i +=1
     
     # Sync loop
-    time.sleep(max(0, dt - (time.time() - t_start)))
+    #time.sleep(max(0, dt - (time.time() - t_start)))
 
 cv2.destroyAllWindows()
 egomotion.release_cam()
