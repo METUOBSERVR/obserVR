@@ -45,7 +45,7 @@ if __name__ == '__main__':
         ret = egomotion.optical_flow()
 
         if ret:
-            egomotion.calculate_egomotion(drawpoints=True, showtR=False)
+            egomotion.calculate_egomotion(drawpoints=False, showtR=False)
 
         td = egomotion.current_location()
         Rd = egomotion.current_rotation()
@@ -53,8 +53,8 @@ if __name__ == '__main__':
         t.append(time.time() - t0)
         tdata.append(td)
         Rdata.append(Rd)
-        cv2.imshow('R', egomotion.frame)
-        cv2.waitKey(1)
+        #cv2.imshow('R', egomotion.frame)
+        #cv2.waitKey(1)
         print(f"X\t{td[0]:.4f}\t\tY\t{td[1]:.4f}\t\tZ\t{td[2]:.4f}\tPIT\t{Rd[0]:.4f}\t\tYAW\t{Rd[1]:.4f}\t\tROL\t{Rd[2]:.4f}")
 
     cv2.destroyAllWindows()

@@ -36,10 +36,11 @@ def stereo_scaler(frameR, frameL, disp0, mapRx, mapRy, mapLx, mapLy, f, B, dzpip
     Z1 = np.zeros_like(disp1, dtype=np.float32)
     Z0[valid] = (f * B) / disp0[valid]
     Z1[valid] = (f * B) / disp1[valid]
+
     
     # dz
     dz = Z0 - Z1
-    dz = np.mean(dz)
+    dz = np.mean(dz[valid])
 
     dzpipe.send(dz)
     disppipe.send(disp1)

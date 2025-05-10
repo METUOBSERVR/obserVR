@@ -5,12 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cfaba5a6-dc32-4db4-9a37-c855a70eb196" name="Changes" comment="Stereo code">
-      <change afterPath="$PROJECT_DIR$/stereoscaler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/EgoMotionApp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/EgoMotionApp.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/egomotion.py" beforeDir="false" afterPath="$PROJECT_DIR$/egomotion.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/03Jan2025_05.31.38.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_07.59.32.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.00.59.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.03.54.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.06.34.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.07.48.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.09.11.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.11.07.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.12.51.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.13.52.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.15.50.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.16.55.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.29.10.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.30.13.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/18Dec2024_08.32.55.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/outputs.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/stereoscaler.py" beforeDir="false" afterPath="$PROJECT_DIR$/stereoscaler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,18 +40,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "ashharadnan"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;ashharadnan&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/METUOBSERVR/obserVR",
-    "accountId": "8dec9212-b65a-4810-a171-5aab9ee4cabb"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/METUOBSERVR/obserVR&quot;,
+    &quot;accountId&quot;: &quot;8dec9212-b65a-4810-a171-5aab9ee4cabb&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
@@ -48,23 +61,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.egomotion.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Python.egomotion.executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
     <layout>
       <window_info id="Bookmarks" show_stripe_button="false" side_tool="true" />
@@ -72,9 +86,9 @@
       <window_info id="Commit_Guest" show_stripe_button="false" />
       <window_info id="Pull Requests" show_stripe_button="false" />
       <window_info id="Learn" show_stripe_button="false" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3298828" />
-      <window_info id="Commit" order="1" weight="0.3298828" />
-      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17363282" />
+      <window_info active="true" id="Commit" order="2" side_tool="true" visible="true" weight="0.17363282" />
+      <window_info id="Structure" order="3" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
       <window_info anchor="bottom" id="TypeScript" show_stripe_button="false" />
       <window_info anchor="bottom" id="TODO" show_stripe_button="false" />
@@ -82,11 +96,11 @@
       <window_info anchor="bottom" id="Version Control" order="0" weight="0.32974288" />
       <window_info anchor="bottom" id="Problems" order="1" />
       <window_info anchor="bottom" id="Problems View" order="2" weight="0.32974288" />
-      <window_info anchor="bottom" id="Terminal" order="3" weight="0.32974288" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="3" visible="true" weight="0.32974288" />
       <window_info anchor="bottom" id="Services" order="4" weight="0.32974288" />
       <window_info anchor="bottom" id="Python Packages" order="5" weight="0.32974288" />
       <window_info anchor="bottom" id="Python Console" order="6" weight="0.1" />
-      <window_info active="true" anchor="bottom" id="Run" order="6" visible="true" weight="0.32974288" />
+      <window_info active="true" anchor="bottom" id="Run" order="7" visible="true" weight="0.32974288" />
       <window_info anchor="right" id="Endpoints" show_stripe_button="false" />
       <window_info anchor="right" id="Coverage" show_stripe_button="false" side_tool="true" />
       <window_info anchor="right" id="SciView" show_stripe_button="false" />
@@ -101,7 +115,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-09665e90c3a7-b11f5e8da5ad-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.15026.15" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.18034.53" />
+        <option value="bundled-python-sdk-13a8072ce35e-2767605e8bc2-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.18034.53" />
       </set>
     </attachedChunks>
   </component>
@@ -115,6 +130,7 @@
       <updated>1742608140312</updated>
       <workItem from="1742608142528" duration="645000" />
       <workItem from="1742608805839" duration="1623000" />
+      <workItem from="1746862322171" duration="193000" />
     </task>
     <task id="LOCAL-00001" summary="Quarternion based rotations">
       <option name="closed" value="true" />
