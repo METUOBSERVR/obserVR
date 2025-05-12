@@ -5,13 +5,62 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cfaba5a6-dc32-4db4-9a37-c855a70eb196" name="Changes" comment="simulator upgrade">
-      <change afterPath="$PROJECT_DIR$/../cameraSys/.idea/jupyter-settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../cameraSys/.ipynb_checkpoints/pycam-checkpoint.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../cameraSys/anaconda_projects/db/project_filebrowser.db" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../cameraSys/calibrate.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../cameraSys/calibrationR.calib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/calibrationL.calib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/calibrationR.calib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/calibrationStereo.calib" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../cameraSys/pycam.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../cameraSys/pycam.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/23.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/24.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/25.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/26.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/27.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/28.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/29.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/30.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/31.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/33.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/34.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/35.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/36.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/37.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/38.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/39.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/40.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/41.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/42.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/43.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/44.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/45.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/46.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/47.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/48.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/calibration images/9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/egomotion.py" beforeDir="false" afterPath="$PROJECT_DIR$/egomotion.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stereoscaler.py" beforeDir="false" afterPath="$PROJECT_DIR$/stereoscaler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,24 +91,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.egomotion.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Ongoing/obserVR/CAMERA/cameraSys&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Python.egomotion.executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/Ongoing/obserVR/CAMERA/cameraSys",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
     <layout>
       <window_info id="Bookmarks" show_stripe_button="false" side_tool="true" />
@@ -113,7 +163,7 @@
       <workItem from="1742608805839" duration="1623000" />
       <workItem from="1746862322171" duration="2845000" />
       <workItem from="1746867535046" duration="690000" />
-      <workItem from="1747013692133" duration="365000" />
+      <workItem from="1747013692133" duration="1273000" />
     </task>
     <task id="LOCAL-00001" summary="Quarternion based rotations">
       <option name="closed" value="true" />

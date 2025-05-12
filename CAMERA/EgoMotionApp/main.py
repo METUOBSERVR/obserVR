@@ -17,7 +17,7 @@ def input_thread():
 
 if __name__ == '__main__':
     # Initialise EgoMotion
-    egomotion = EgoMotion(framewidth=640, frameheight=480, fps=120, calibFile="calibration_logi.calib")
+    egomotion = EgoMotion(framewidth=640, frameheight=480, fps=120, calibFile="calibrationStereo.calib")
     tdata = []
     Rdata = []
     t = []

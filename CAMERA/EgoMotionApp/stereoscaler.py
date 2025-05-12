@@ -17,12 +17,12 @@ num_disp = 16 * 6
 invalid_disp = 1.0
 
 
-def stereo_scaler(frameR, frameL, disp0, mapRx, mapRy, mapLx, mapLy, f, B, dzpipe, disppipe, stereo):
+def stereo_scaler(frameR, frameL, disp0, mapRx, mapRy, mapLx, mapLy, fR, fL, B, dzpipe, disppipe, stereo):
     """
     Stereo scaling algorithm. This function is meant to be ran using the multiprocessing module
     """
 
-    disp1 = calc_disparity(frameR, frameL, mapRx, mapRy, mapLx, mapLy, f, B, stereo)
+    disp1 = calc_disparity(frameR, frameL, mapRx, mapRy, mapLx, mapLy, stereo)
 
     # mask out invalid disparities
     mask0 = disp0 > invalid_disp
@@ -35,8 +35,8 @@ def stereo_scaler(frameR, frameL, disp0, mapRx, mapRy, mapLx, mapLy, f, B, dzpip
     # compute depths
     Z0 = np.zeros_like(disp0, dtype=np.float32)
     Z1 = np.zeros_like(disp1, dtype=np.float32)
-    Z0[valid] = (f * B) / disp0[valid]
-    Z1[valid] = (f * B) / disp1[valid]
+    Z0[valid] = (fR * B) / disp0[valid]
+    Z1[valid] = (fL * B) / disp1[valid]
 
     cv2.imshow("d",disp0)
     cv2.waitKey(0)
@@ -50,7 +50,7 @@ def stereo_scaler(frameR, frameL, disp0, mapRx, mapRy, mapLx, mapLy, f, B, dzpip
     disppipe.send(disp1)
 
 
-def calc_disparity(frameR, frameL, mapRx, mapRy, mapLx, mapLy, f, B, stereo):
+def calc_disparity(frameR, frameL, mapRx, mapRy, mapLx, mapLy, stereo):
     """
     This function calculated the disparity between two images
     """

@@ -108,7 +108,7 @@ class EgoMotion:
         self.stereo = create_SGBM()
                 
         # Calculate First Disparity
-        self.disp0 = calc_disparity(self.f0, self.fc0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.f, self.B, self.stereo)
+        self.disp0 = calc_disparity(self.f0, self.fc0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.stereo)
 
         self.good_p0 = np.empty((0, 2), dtype=np.float32)
         self.good_p1 = np.empty((0, 2), dtype=np.float32)
@@ -166,7 +166,7 @@ class EgoMotion:
 
         dzpipe0, dzpipe = Pipe()
         disppipe0, disppipe = Pipe()
-        stereoProc = Process(target=stereo_scaler, args=(self.f1, self.fc1, self.disp0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.f, self.B, dzpipe, disppipe, self.stereo))
+        stereoProc = Process(target=stereo_scaler, args=(self.f1, self.fc1, self.disp0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.fR, self.fL, self.B, dzpipe, disppipe, self.stereo))
         stereoProc.start()
 
         E, _ = cv2.findEssentialMat(self.good_p1, self.good_p0, self.mtx, cv2.RANSAC, 0.999, 1.0, None)
@@ -243,12 +243,16 @@ class EgoMotion:
         :return: None
         """
         with open(calibFile, 'rb') as f:
-            self.mtx, self.dist = load(f)
+            mtxR, distR, mtxL, distL, R, T = load(f)
+
+        self.mtx = mtxR
+        self.dist = distR
         
-        self.K1, self.K2 = (self.mtx, self.mtx)
-        self.D1, self.D2 = (self.dist, self.dist)
-        self.f = 1.4e3
-        self.calibR = np.eye(3)
-        self.B = 12
-        self.calibT = np.array([self.B / 1000.0, 0.0, 0.0], dtype=float)
+        self.K1, self.K2 = (mtxL, mtxR)
+        self.D1, self.D2 = (distL, distR)
+        self.fR = np.mean([mtxR[0,0], mtxR[1,1]])
+        self.fL = np.mean([mtxL[0,0], mtxL[1,1]])
+        self.calibR = R
+        self.B = np.linalg.norm(T)
+        self.calibT = T
         
