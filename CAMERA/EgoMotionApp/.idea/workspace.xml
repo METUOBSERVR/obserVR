@@ -4,24 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cfaba5a6-dc32-4db4-9a37-c855a70eb196" name="Changes" comment="stereo code">
+    <list default="true" id="cfaba5a6-dc32-4db4-9a37-c855a70eb196" name="Changes" comment="new calibration settings">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
-    <envs>
-      <env key="FLASK_APP" value="app" />
-    </envs>
-    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
-    <option name="myEnvs">
-      <map>
-        <entry key="FLASK_APP" value="app" />
-      </map>
-    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -73,24 +62,23 @@
       <window_info id="Commit_Guest" show_stripe_button="false" />
       <window_info id="Pull Requests" show_stripe_button="false" />
       <window_info id="Learn" show_stripe_button="false" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.2945772" visible="true" weight="0.17363282" />
-      <window_info id="Commit" order="1" sideWeight="0.70542276" side_tool="true" weight="0.17363282" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.29401022" visible="true" weight="0.17363282" />
+      <window_info id="Commit" order="1" sideWeight="0.7059897" side_tool="true" weight="0.17363282" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
       <window_info anchor="bottom" id="TypeScript" show_stripe_button="false" />
       <window_info anchor="bottom" id="TODO" show_stripe_button="false" />
       <window_info anchor="bottom" id="File Transfer" show_stripe_button="false" />
       <window_info anchor="bottom" id="Find" />
-      <window_info anchor="bottom" id="Version Control" order="0" weight="0.19562197" />
+      <window_info anchor="bottom" id="Version Control" order="0" weight="0.32974288" />
       <window_info anchor="bottom" id="Problems" order="1" />
       <window_info anchor="bottom" id="Problems View" order="2" weight="0.32974288" />
-      <window_info anchor="bottom" id="Terminal" order="3" weight="0.19562197" />
+      <window_info anchor="bottom" id="Terminal" order="3" weight="0.32974288" />
       <window_info anchor="bottom" id="Services" order="4" weight="0.32974288" />
       <window_info anchor="bottom" id="Python Packages" order="5" weight="0.32974288" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="6" visible="true" weight="0.19562197" />
+      <window_info anchor="bottom" id="Python Console" order="6" weight="0.1" />
       <window_info active="true" anchor="bottom" id="Run" order="7" visible="true" weight="0.32974288" />
       <window_info anchor="right" id="Endpoints" show_stripe_button="false" />
-      <window_info anchor="right" id="documentation.v2" side_tool="true" />
       <window_info anchor="right" id="Coverage" show_stripe_button="false" side_tool="true" />
       <window_info anchor="right" id="SciView" show_stripe_button="false" />
       <window_info anchor="right" content_ui="combo" id="Notifications" order="0" weight="0.25" />
@@ -104,8 +92,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.18034.53" />
-        <option value="bundled-python-sdk-13a8072ce35e-2767605e8bc2-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.18034.53" />
+        <option value="bundled-python-sdk-09665e90c3a7-b11f5e8da5ad-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.15026.15" />
       </set>
     </attachedChunks>
   </component>
@@ -121,9 +108,8 @@
       <workItem from="1742608805839" duration="1623000" />
       <workItem from="1746862322171" duration="2845000" />
       <workItem from="1746867535046" duration="690000" />
-      <workItem from="1747013692133" duration="1273000" />
-      <workItem from="1746867535046" duration="830000" />
-      <workItem from="1746877531810" duration="2962000" />
+      <workItem from="1747013692133" duration="1318000" />
+      <workItem from="1747015144253" duration="6000" />
     </task>
     <task id="LOCAL-00001" summary="Quarternion based rotations">
       <option name="closed" value="true" />
@@ -141,7 +127,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746862732960</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="new calibration settings">
+      <option name="closed" value="true" />
+      <created>1747015004307</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1747015004307</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -163,7 +157,8 @@
     <MESSAGE value="Stereo code" />
     <MESSAGE value="stereo code" />
     <MESSAGE value="simulator upgrade" />
-    <option name="LAST_COMMIT_MESSAGE" value="simulator upgrade" />
+    <MESSAGE value="new calibration settings" />
+    <option name="LAST_COMMIT_MESSAGE" value="new calibration settings" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/EgoMotionApp$main.coverage" NAME="main Coverage Results" MODIFIED="1746862852794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
