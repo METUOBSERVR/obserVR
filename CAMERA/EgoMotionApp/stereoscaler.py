@@ -11,7 +11,7 @@ from multiprocessing import Process, Pipe
 """
 Constants
 """
-window_size = 7* 2 + 5
+window_size = 7 * 2 + 5
 min_disp = 2
 num_disp = 16 * 4
 invalid_disp = 0
