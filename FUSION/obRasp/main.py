@@ -8,21 +8,25 @@ import datetime
 import cv2
 import pandas as pd
 import IMU
+import VoltageMonitor
 import threading
 import _thread
 import multiprocessing
 from scipy.spatial.transform import Rotation
-
 import socket
 import struct
+from smbus2 import SMBus
 
-"""
-# Setup TCP socket
-TCP_IP = "10.137.77.167"   # Replace with your Windows PC IP
-TCP_PORT = 9000
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect((TCP_IP, TCP_PORT))"""
+# INA226 config
+INA226_ADDRESS = 0x40
+REG_BUS_VOLTAGE = 0x02
+BUS_VOLTAGE_LSB = 1.25e-3  # 1.25 mV per bit
+i2c_bus = SMBus(1)  # I2C-1 for Raspberry Pi
 
+def read_bus_voltage(bus):
+    raw = bus.read_word_data(INA226_ADDRESS, REG_BUS_VOLTAGE)
+    raw = ((raw << 8) & 0xFF00) + (raw >> 8)  # Swap bytes
+    return raw * BUS_VOLTAGE_LSB
 
 def input_thread():
     global endFlag
@@ -36,7 +40,7 @@ Fs = 100  # Hz
 dt = 1 / Fs
 decay_tau = 0.3
 decay_alpha = np.exp(-1 / (decay_tau * Fs))
-a = 0.75  # Complement weight for IMU velocity
+a = 0.25  # Complement weight for IMU velocity
 
 # Data buffers
 N = 1000
@@ -47,10 +51,13 @@ vx, vy, vz = 0.0, 0.0, 0.0
 # initialaze egomotion
 egomotion = EgoMotion(framewidth=640, frameheight=480, fps=120, calibFile="calibrationStereo.calib")
 
+
 # Initialize IMU
 imu = IMU.BNO055Observer()
 imu._calibrate()
 print('The imu is calibrated.')
+
+
 threadFunctionIMU = threading.Thread(target = imu.start, daemon = True)
 threadFunctionIMU.start()
 
@@ -61,6 +68,13 @@ pos_cam = [np.zeros(shape=3)]
 time_vector = [0]
 estimated_pos = [np.zeros(shape=3)]
 rotation = [np.zeros((3))]
+
+# --------- TCP SETUP ---------------------------------------------------
+DEST_IP, DEST_PORT = "192.168.10.167", 5005
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+sock.settimeout(0.05)
+sock.connect((DEST_IP, DEST_PORT))
 
 endFlag = False
 
@@ -77,7 +91,7 @@ i = 0
 while not endFlag:
     t_start = time.time()
     time_vector.append((i+1)*dt)
-
+    timestamp = int(t_start)  # Integer Unix timestamp
 
     imu_data = imu.get_data()
 
@@ -121,11 +135,18 @@ while not endFlag:
 
     egomotion.Tpose = new_pos.reshape((1,3))
 
-    print(f"estimated:{estimated_pos[i+1]}")
+    #print(f"estimated:{estimated_pos[i+1]}")
+    print(f"estimated:{imu_roll, imu_yaw, imu_pitch}")
     
-    x, y, z = (estimated_pos[i+1][0],estimated_pos[i+1][1],estimated_pos[i+1][2])
-    packet = struct.pack('dfff', t_start, x, y, z)  # d=double, fff=3 floats
-    #sock.sendall(packet)
+    x, y, z = (estimated_pos[i+1][0],estimated_pos[i+1][1],estimated_pos[i+1][2])    
+    voltage = read_bus_voltage(i2c_bus)
+
+    try:
+        packet = struct.pack('!Qfff fff f', timestamp, x, y, z, imu_roll, imu_pitch, imu_yaw, voltage)
+        sock.sendall(packet)
+    except BrokenPipeError:
+        print("TCP connection lost.")
+        break
     
     i +=1
     
@@ -134,7 +155,9 @@ while not endFlag:
 
 cv2.destroyAllWindows()
 egomotion.release_cam()
-
+sock.close()
+i2c_bus.close()
+"""
 estimated_pos = np.array(estimated_pos)
 time_vector   = np.array(time_vector)
 rotation      = np.array(rotation)
@@ -150,9 +173,7 @@ print(df)
 fname = datetime.datetime.now().strftime("outputs/%d%b%Y_%H.%M.%S.csv")
 df.to_csv(fname, index=False)
 print(f"Saved data at {fname}")
-
-
-sock.close()
+"""
 
 
 """

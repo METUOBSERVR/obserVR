@@ -11,10 +11,10 @@ from multiprocessing import Process, Pipe
 """
 Constants
 """
-window_size = 6* 2 + 5
-min_disp = 21
+window_size = 7* 2 + 5
+min_disp = 2
 num_disp = 16 * 4
-invalid_disp = 1.0
+invalid_disp = 0
 
 
 def stereo_scaler(frameR, frameL, disp0, mapRx, mapRy, mapLx, mapLy, f, B, Q, dzpipe, disppipe, stereo):
@@ -83,9 +83,9 @@ def create_SGBM():
         P1=8 * 3 * window_size ** 2,
         P2=32 * 3 * window_size ** 2,
         disp12MaxDiff=9,
-        uniquenessRatio=25,
+        uniquenessRatio=8,
         speckleWindowSize=21*2,
-        speckleRange=27,
-        preFilterCap=52
+        speckleRange=62,
+        preFilterCap=5
     )
     return stereo
