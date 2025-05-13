@@ -8,6 +8,11 @@ import cv2
 import numpy as np
 from multiprocessing import Process, Pipe
 
+block_size = 3
+min_disp = 5
+num_disp = 8
+invalid_disp = 12
+
 
 def stereo_scaler(frameR, frameL, disp0, mapRx, mapRy, mapLx, mapLy, f, B, Q, dzpipe, disppipe, stereoLeft, stereoRight, wls_filter):
     """
@@ -15,28 +20,22 @@ def stereo_scaler(frameR, frameL, disp0, mapRx, mapRy, mapLx, mapLy, f, B, Q, dz
     """
 
     disp1 = calc_disparity(frameR, frameL, mapRx, mapRy, mapLx, mapLy, stereoLeft, stereoRight, wls_filter)
-
-    # mask out invalid disparities
-    mask0 = disp0 > invalid_disp
-    mask1 = disp1 > invalid_disp
-    valid = mask0 & mask1
     
 
     # allocate output
     dz = np.zeros_like(disp1, dtype=np.float32)
-    
-    cv2.imshow("disp0",disp0)
-    cv2.waitKey(0)
 
     # compute depths
-    Z0 = cv2.reprojectImageTo3D(disp0, Q)[:,:,0]
-    Z1 = cv2.reprojectImageTo3D(disp1, Q)[:,:,0]
+    Z0 = np.where(disp0 > 0, (f * B) / disp0, 0)
+    Z1 = np.where(disp1 > 0, (f * B) / disp1, 0)
+    
+    # mask out invalid Z
+    Z0[Z0<0] = np.nan
+    Z1[Z1<0] = np.nan
     
     # dz
     dz = Z0 - Z1
-    dz = np.mean(dz[valid])
-    
-    print(dz)
+    dz = np.nanmean(dz)
 
     dzpipe.send(dz)
     disppipe.send(disp1)
@@ -56,7 +55,7 @@ def calc_disparity(frameR, frameL, mapRx, mapRy, mapLx, mapLy, stereoLeft, stere
 
     disp = wls_filter.filter(dispL, frameL, disparity_map_right=dispR)
 
-    disp = (((disp).astype(np.float32) - min_disp)/ 16.0)
+    disp = (((disp).astype(np.float32))/ 16.0)
     return disp                                
 
 
@@ -79,10 +78,6 @@ def compute_maps(frameR, frameL, K1, K2, D1, D2, R, T):
 
 
 def create_SGBM():
-    block_size = 3
-    min_disp = 5
-    num_disp = 8
-    invalid_disp = 0
 
     minDisparity = min_disp
     numDisparities = num_disp
