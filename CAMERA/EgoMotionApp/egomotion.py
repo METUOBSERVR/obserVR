@@ -104,11 +104,11 @@ class EgoMotion:
             self.update_frames()
             
         # Calculate disparity maps
-        self.mapLx, self.mapLy, self.mapRx, self.mapRy, self.Q = compute_maps(self.f0, self.fc0, self.K1, self.K2, self.D1, self.D2, self.calibR, self.calibT)
-        self.stereo = create_SGBM()
+        self.mapLx, self.mapLy, self.mapRx, self.mapRy, self.Q, self.B, self.f = compute_maps(self.f0, self.fc0, self.K1, self.K2, self.D1, self.D2, self.calibR, self.calibT)
+        self.stereoLeft, self.stereoRight, self.wls_filter = create_SGBM()
                 
         # Calculate First Disparity
-        self.disp0 = calc_disparity(self.f0, self.fc0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.stereo)
+        self.disp0 = calc_disparity(self.f0, self.fc0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.stereoLeft, self.stereoRight, self.wls_filter)
 
         self.good_p0 = np.empty((0, 2), dtype=np.float32)
         self.good_p1 = np.empty((0, 2), dtype=np.float32)
@@ -166,7 +166,7 @@ class EgoMotion:
 
         dzpipe0, dzpipe = Pipe()
         disppipe0, disppipe = Pipe()
-        stereoProc = Process(target=stereo_scaler, args=(self.f1, self.fc1, self.disp0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.f, self.B, self.Q, dzpipe, disppipe, self.stereo))
+        stereoProc = Process(target=stereo_scaler, args=(self.f1, self.fc1, self.disp0, self.mapRx, self.mapRy, self.mapLx, self.mapLy, self.f, self.B, self.Q, dzpipe, disppipe, self.stereoLeft, self.stereoRight, self.wls_filter))
         stereoProc.start()
 
         E, _ = cv2.findEssentialMat(self.good_p1, self.good_p0, self.mtx, cv2.RANSAC, 0.999, 1.0, None)
@@ -250,8 +250,6 @@ class EgoMotion:
         
         self.K1, self.K2 = (mtxL, mtxR)
         self.D1, self.D2 = (distL, distR)
-        self.f = np.mean([mtxR[0,0], mtxR[1,1], mtxL[0,0], mtxL[1,1]])
         self.calibR = R
-        self.B = np.linalg.norm(T)
         self.calibT = T
         

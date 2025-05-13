@@ -4,11 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cfaba5a6-dc32-4db4-9a37-c855a70eb196" name="Changes" comment="new calibration" />
+    <list default="true" id="cfaba5a6-dc32-4db4-9a37-c855a70eb196" name="Changes" comment="new calibration">
+      <change afterPath="$PROJECT_DIR$/calibrationStereo_mat.calib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stereo_egomotion.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/egomotion.py" beforeDir="false" afterPath="$PROJECT_DIR$/egomotion.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stereoscaler.py" beforeDir="false" afterPath="$PROJECT_DIR$/stereoscaler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
     <envs>
@@ -71,21 +88,21 @@
       <window_info id="Commit_Guest" show_stripe_button="false" />
       <window_info id="Pull Requests" show_stripe_button="false" />
       <window_info id="Learn" show_stripe_button="false" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.3709213" visible="true" weight="0.26777345" />
-      <window_info active="true" id="Commit" order="1" sideWeight="0.62907875" side_tool="true" visible="true" weight="0.26777345" />
-      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.47072935" visible="true" weight="0.22753906" />
+      <window_info id="Commit" order="1" sideWeight="0.62907875" side_tool="true" weight="0.22753906" />
+      <window_info active="true" id="Structure" order="2" sideWeight="0.52927065" side_tool="true" visible="true" weight="0.22753906" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
       <window_info anchor="bottom" id="TypeScript" show_stripe_button="false" />
       <window_info anchor="bottom" id="TODO" show_stripe_button="false" />
       <window_info anchor="bottom" id="File Transfer" show_stripe_button="false" />
       <window_info anchor="bottom" id="Find" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="0" visible="true" weight="0.22758861" />
+      <window_info anchor="bottom" id="Version Control" order="0" weight="0.22758861" />
       <window_info anchor="bottom" id="Problems" order="1" />
-      <window_info anchor="bottom" id="Problems View" order="2" weight="0.32974288" />
-      <window_info anchor="bottom" id="Terminal" order="3" weight="0.19562197" />
-      <window_info anchor="bottom" id="Services" order="4" weight="0.32974288" />
-      <window_info anchor="bottom" id="Python Packages" order="5" weight="0.32974288" />
-      <window_info anchor="bottom" id="Python Console" order="6" weight="0.19562197" />
+      <window_info anchor="bottom" id="Problems View" order="2" weight="0.22758861" />
+      <window_info anchor="bottom" id="Terminal" order="3" weight="0.22758861" />
+      <window_info anchor="bottom" id="Services" order="4" weight="0.22758861" />
+      <window_info anchor="bottom" id="Python Packages" order="5" weight="0.22758861" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="6" visible="true" weight="0.22758861" />
       <window_info active="true" anchor="bottom" id="Run" order="7" visible="true" weight="0.32974288" />
       <window_info anchor="right" id="Endpoints" show_stripe_button="false" />
       <window_info anchor="right" id="documentation.v2" side_tool="true" />
@@ -148,7 +165,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747163768219</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="new calibration">
+      <option name="closed" value="true" />
+      <created>1747164181798</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1747164181798</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
