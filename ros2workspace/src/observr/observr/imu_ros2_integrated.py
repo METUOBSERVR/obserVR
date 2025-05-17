@@ -209,6 +209,7 @@ class BNO055Observer(Node):
 
         # Publish
         self.publisher_.publish(msg)
+        self.publisherRAW_.publish(msgRaw)
         self.publisherPOS_.publish(msg2)
        # self.get_logger().info('Publishing IMU data...')
 
