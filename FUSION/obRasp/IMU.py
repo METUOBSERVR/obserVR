@@ -1,5 +1,5 @@
 import time
-import board
+import busio
 import numpy as np
 import adafruit_bno055
 import threading
@@ -9,7 +9,7 @@ class BNO055Observer:
     NDOF_MODE = 0x0C
 
     def __init__(self, sample_amount=1000):
-        self.i2c = board.I2C()
+        self.i2c = busio.I2C(scl=3, sda=2)
         self.sensor = adafruit_bno055.BNO055_I2C(self.i2c)
         self.sample_amount = sample_amount
 
