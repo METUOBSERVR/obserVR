@@ -15,7 +15,7 @@ import numpy as np
 class DualCamPublisher(Node):
     def __init__(self,
                  size=(640, 480),            # (height, width)
-                 framerate=120,               # ROS publish rate, not sensor FPS
+                 framerate=30,               # ROS publish rate, not sensor FPS
                  sensor_fps=120):
 
         super().__init__("dual_camera_publisher")
@@ -39,8 +39,8 @@ class DualCamPublisher(Node):
             cam.start("main",show_preview=False)
 
         # --- ROS publishers --------------------------------------------------
-        qos = rclpy.qos.QoSProfile(depth=5)
-        self.pub_left  = self.create_publisher(Image, "/cam0/image_raw",  qos)
+        qos = rclpy.qos.QoSProfile(depth=2)
+        self.pub_left =  self.create_publisher(Image, "/cam0/image_raw", qos)
         self.pub_right = self.create_publisher(Image, "/cam1/image_raw", qos)
 
         # --- timer -----------------------------------------------------------

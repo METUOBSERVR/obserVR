@@ -54,14 +54,15 @@ class BNO055Observer(Node):
         self.wait_for_built_in_calibration()
         self.get_logger().info("IMU is calibrated")
 
-        self.return_imu_bias_calibration()
-        time.sleep(10)
-        self.wait_for_imu_bias_calibration()
-        self.return_imu_bias_calibration()
-        self.get_logger().info("IMU bias calibration completed")
+      #  self.return_imu_bias_calibration()
+      #  time.sleep(10)
+      #  self.wait_for_imu_bias_calibration()
+      #  self.return_imu_bias_calibration()
+      #  self.get_logger().info("IMU bias calibration completed")
 
         # ROS2 publishers
-        self.publisher_ = self.create_publisher(Imu, '/imu0', 10)
+        self.publisher_ = self.create_publisher(Imu, '/imu0', 5)
+        self.publisherRAW_ = self.create_publisher(Imu, '/imu_raw', 5)
         self.publisherPOS_ = self.create_publisher(PoseStamped, '/IMUpose', 10)
         self.timer = self.create_timer(self.publish_period, self.publish_imu_data)
 
@@ -108,7 +109,12 @@ class BNO055Observer(Node):
         msg = Imu()
         msg.header = Header()
         msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id = "imu_link"
+        msg.header.frame_id = "/imu_data"
+
+        msgRaw = Imu()
+        msg.header = Header()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = "/imu_data_raw"
 
         # Orientation
         quat = self.sensor.quaternion
@@ -117,9 +123,18 @@ class BNO055Observer(Node):
             msg.orientation.y = quat[1]
             msg.orientation.z = quat[2]
             msg.orientation.w = quat[3]
+
+            msgRaw.orientation.x = quat[0]
+            msgRaw.orientation.y = quat[1]
+            msgRaw.orientation.z = quat[2]
+            msgRaw.orientation.w = quat[3]
+
         msg.orientation_covariance = [0.0159, 0.0, 0.0,
                                       0.0, 0.0159, 0.0,
                                       0.0, 0.0, 0.0159]
+        msgRaw.orientation_covariance = [0.0159, 0.0, 0.0,
+                                        0.0, 0.0159, 0.0,
+                                        0.0, 0.0, 0.0159]
 
         # Angular velocity
         gyro = self.sensor.gyro
@@ -127,9 +142,33 @@ class BNO055Observer(Node):
             msg.angular_velocity.x = gyro[0] - self.angularVelBiasX
             msg.angular_velocity.y = gyro[1] - self.angularVelBiasY
             msg.angular_velocity.z = gyro[2] - self.angularVelBiasZ
+
+            msgRaw.angular_velocity.x = gyro[0] - self.angularVelBiasX
+            msgRaw.angular_velocity.y = gyro[1] - self.angularVelBiasY
+            msgRaw.angular_velocity.z = gyro[2] - self.angularVelBiasZ
+
         msg.angular_velocity_covariance = [0.04, 0.0, 0.0,
                                            0.0, 0.04, 0.0,
                                            0.0, 0.0, 0.04]
+
+        msgRaw.angular_velocity_covariance = [0.04, 0.0, 0.0,
+                                              0.0, 0.04, 0.0,
+                                              0.0, 0.0, 0.04]
+
+        #Accelerometer
+        accelerometer = self.sensor.acceleration
+        if accelerometer is not None:
+            amx = accelerometer[0]
+            amy = accelerometer[1]
+            amz = accelerometer[2]
+
+            msgRaw.linear_acceleration.x = amx
+            msgRaw.linear_acceleration.y = amy
+            msgRaw.linear_acceleration.z = amz
+
+        msgRaw.linear_acceleration_covariance = [0.017, 0.0, 0.0,
+                                                 0.0, 0.017, 0.0,
+                                                 0.0, 0.0, 0.017]
 
         # Linear acceleration
         accel = self.sensor.linear_acceleration
@@ -158,7 +197,7 @@ class BNO055Observer(Node):
         msg2 = PoseStamped()
         msg2.header = Header()
         msg2.header.stamp = self.get_clock().now().to_msg()
-        msg2.header.frame_id = "imu_link"
+        msg2.header.frame_id = "/imu_pose_raw"
         msg2.pose.position.x = self.locX
         msg2.pose.position.y = self.locY
         msg2.pose.position.z = self.locZ
@@ -171,7 +210,7 @@ class BNO055Observer(Node):
         # Publish
         self.publisher_.publish(msg)
         self.publisherPOS_.publish(msg2)
-        self.get_logger().info('Publishing IMU data...')
+       # self.get_logger().info('Publishing IMU data...')
 
 
 def main(args=None):
