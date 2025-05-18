@@ -5,6 +5,7 @@
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
+from std_msgs.msg import Header
 from cv_bridge import CvBridge
 from picamera2 import Picamera2
 from libcamera import controls
@@ -39,7 +40,7 @@ class DualCamPublisher(Node):
             cam.start("main",show_preview=False)
 
         # --- ROS publishers --------------------------------------------------
-        qos = rclpy.qos.QoSProfile(depth=2)
+        qos = rclpy.qos.QoSProfile(depth=5)
         self.pub_left =  self.create_publisher(Image, "/cam0/image_raw", qos)
         self.pub_right = self.create_publisher(Image, "/cam1/image_raw", qos)
 
@@ -50,6 +51,7 @@ class DualCamPublisher(Node):
     # -------------------------------------------------------------------------
     def grab_and_publish(self):
         try:
+            
             # acquire   (make arrays contiguous to satisfy OpenCV/GTK)
             img0 = self.cams[0].capture_array()
             img1 = self.cams[1].capture_array()
@@ -58,14 +60,23 @@ class DualCamPublisher(Node):
             img1 = cv2.rotate(img1, cv2.ROTATE_90_CLOCKWISE)
 
             # Picamera2 gives XRGB → convert to BGR (drop alpha)
-            img_left  = cv2.cvtColor(img0,  cv2.COLOR_BGRA2BGR)
-            img_right = cv2.cvtColor(img1, cv2.COLOR_BGRA2BGR)
+            img_left  = cv2.cvtColor(img0,  cv2.COLOR_RGBA2RGB)
+            img_right = cv2.cvtColor(img1, cv2.COLOR_RGBA2RGB)
+
+            msg0 = self.bridge.cv2_to_imgmsg(img_left, encoding="rgb8")
+            msg1 = self.bridge.cv2_to_imgmsg(img_right, encoding="rgb8")
+            
+            msg0.header = Header()
+            msg0.header.stamp = self.get_clock().now().to_msg()
+            msg0.header.frame_id = "/cam1_raw"
+
+            msg1.header = Header()
+            msg1.header.stamp = self.get_clock().now().to_msg()
+            msg1.header.frame_id = "/cam1_raw"
 
             # publish
-            self.pub_left.publish(
-                self.bridge.cv2_to_imgmsg(img_left,  encoding="bgr8"))
-            self.pub_right.publish(
-                self.bridge.cv2_to_imgmsg(img_right, encoding="bgr8"))
+            self.pub_left.publish(msg0)
+            self.pub_right.publish(msg1)
 
         except Exception as e:
             self.get_logger().error(f"Capture/publish error: {e}")
