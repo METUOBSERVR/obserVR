@@ -28,7 +28,7 @@ class EgomotionSolver(Node):
         self.ego = EgoMotion(framewidth=640, frameheight=480, fps=15, calibFile="data/calibrationL.calib")
 
         # main draw loop – fires even if only one camera publishes for a while
-        self.timer = self.create_timer(1.0 / 30, self.calculatepose)   # 15 Hz refresh
+        self.timer = self.create_timer(1.0 / 15, self.calculatepose)   # 15 Hz refresh
         self.get_logger().info("EgoMotion Started")
 
     # ---------- callbacks -----------------------------------------------------
