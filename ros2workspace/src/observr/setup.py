@@ -27,7 +27,8 @@ setup(
         'cam_acquire = observr.camera_ros2_wrapper:main',
         "egomotion_solver = observr.run_egomotion:main",
         'stream_view = observr.camera_stream:main',
-        'rtsp_bridge = observr.rtsp_bridge_rightcam:main',
+        'rtsp_bridge_right = observr.rtsp_bridge_rightcam:main',
+	'rtsp_bridge_left = observr.rtsp_bridge_leftcam:main',
         'tcp_bridge = observr.tcp_imucam:main'
         ],
     },

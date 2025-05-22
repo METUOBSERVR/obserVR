@@ -50,14 +50,14 @@ class BNO055Observer(Node):
         self.get_logger().info("IMU node initialized")
         self.get_logger().info("IMU calibration status: " + str(self.sensor.calibration_status))
 
-        #self.wait_for_built_in_calibration()
+        self.wait_for_built_in_calibration()
         self.get_logger().info("IMU is calibrated")
 
-      #  self.return_imu_bias_calibration()
-      #  time.sleep(10)
-      #  self.wait_for_imu_bias_calibration()
-      #  self.return_imu_bias_calibration()
-      #  self.get_logger().info("IMU bias calibration completed")
+        self.return_imu_bias_calibration()
+        time.sleep(10)
+        self.wait_for_imu_bias_calibration()
+        self.return_imu_bias_calibration()
+        self.get_logger().info("IMU bias calibration completed")
 
         # ROS2 publishers
         self.publisher_ = self.create_publisher(Imu, '/imu0', 5)
@@ -65,7 +65,7 @@ class BNO055Observer(Node):
         self.timer = self.create_timer(self.publish_period, self.publish_imu_data)
 
     def wait_for_built_in_calibration(self):
-        while self.sensor.calibration_status != (3,3,3,3):
+        while (self.sensor.calibration_status[0],self.sensor.calibration_status[1],3,self.sensor.calibration_status[3]) != (3,3,3,3):
             time.sleep(2)
             self.get_logger().info("IMU calibration status: " + str(self.sensor.calibration_status))
 
@@ -117,16 +117,17 @@ class BNO055Observer(Node):
             msg.orientation.z = quat[2]
             msg.orientation.w = quat[3]
 
-        msg.orientation_covariance = [0.0159, 0.0, 0.0,
-                                      0.0, 0.0159, 0.0,
-                                      0.0, 0.0, 0.0159]
+        msg.orientation_covariance = [0, 0.0, 0.0,
+                                      0.0, 0, 0.0,
+                                      0.0, 0.0, 0]
+
 
         # Angular velocity
         gyro = self.sensor.gyro
         if gyro is not None:
-            msg.angular_velocity.x = gyro[0] - self.angularVelBiasX
-            msg.angular_velocity.y = gyro[1] - self.angularVelBiasY
-            msg.angular_velocity.z = gyro[2] - self.angularVelBiasZ
+            msg.angular_velocity.x = gyro[0]
+            msg.angular_velocity.y = gyro[1]
+            msg.angular_velocity.z = gyro[2]
 
         msg.angular_velocity_covariance = [0.04, 0.0, 0.0,
                                            0.0, 0.04, 0.0,
@@ -143,9 +144,9 @@ class BNO055Observer(Node):
             msg.linear_acceleration.y = ay
             msg.linear_acceleration.z = az
 
-        msg.linear_acceleration_covariance = [0.017, 0.0, 0.0,
-                                              0.0, 0.017, 0.0,
-                                              0.0, 0.0, 0.017]
+        msg.linear_acceleration_covariance = [0.02, 0.0, 0.0,
+                                              0.0, 0.02, 0.0,
+                                              0.0, 0.0, 0.02]
 
         # Linear acceleration
         accel = self.sensor.linear_acceleration

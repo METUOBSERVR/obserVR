@@ -1,0 +1,48 @@
+%YAML:1.0 # need to specify the file type at the top!
+
+imu0:
+  T_i_b:
+    - [1.0, 0.0, 0.0, 0.0]
+    - [0.0, 1.0, 0.0, 0.0]
+    - [0.0, 0.0, 1.0, 0.0]
+    - [0.0, 0.0, 0.0, 1.0]
+  accelerometer_noise_density: 0.17265327935162073
+  accelerometer_random_walk: 0.07667261882991969
+  gyroscope_noise_density: 0.003101092247290263
+  gyroscope_random_walk: 1.4214069473240903e-05
+  #  accelerometer_noise_density: 0.1   # [ m / s^2 / sqrt(Hz) ]   ( accel "white noise" )
+  #  accelerometer_random_walk: 0.002   # [ m / s^3 / sqrt(Hz) ].  ( accel bias diffusion )
+  #  gyroscope_noise_density: 0.05      # [ rad / s / sqrt(Hz) ]   ( gyro "white noise" )
+  #  gyroscope_random_walk: 4.0e-05     # [ rad / s^2 / sqrt(Hz) ] ( gyro bias diffusion )
+  rostopic: /imu0
+  time_offset: 0.0
+  update_rate: 100.0
+  # three different modes supported:
+  # "calibrated" (same as "kalibr"), "kalibr", "rpng"
+  model: "kalibr"
+  # how to get from Kalibr imu.yaml result file:
+  #   - Tw is imu0:gyroscopes:M:
+  #   - R_IMUtoGYRO: is imu0:gyroscopes:C_gyro_i:
+  #   - Ta is imu0:accelerometers:M:
+  #   - R_IMUtoACC not used by Kalibr
+  #   - Tg is imu0:gyroscopes:A:
+  Tw:
+    - [0.9219439682339362, 0.0, 0.0]
+    - [0.12216394817733514, 0.8892053383934644, 0.0]
+    - [-0.07186010754099995, -0.010354839691948406, 0.7935498006864744]
+  R_IMUtoGYRO:
+    - [0.9981492962025279, 0.03492333717031634, -0.049782959045076396]
+    - [-0.03857161783910905, 0.99648873981393, -0.07431299833351203]
+    - [0.04701290022609834, 0.07609567625648146, 0.9959915839340194]
+  Ta:
+    - [0.7252271667205638, 0.0, 0.0]
+    - [-0.010255476554890328, 1.0224824705735966, 0.0]
+    - [0.0018938858237454786, -0.011462782687967491, 0.653133203744498]
+  R_IMUtoACC:
+    - [ 1.0, 0.0, 0.0 ]
+    - [ 0.0, 1.0, 0.0 ]
+    - [ 0.0, 0.0, 1.0 ]
+  Tg:
+    - [-0.007572277727711645, 0.018945797340164775, -0.056061660443404715]
+    - [-0.0021772778895858174, 0.019822745762104313, -0.058970445007963924]
+    - [-0.014485592584160446, 0.04818623110738398, -0.14357927195880216]

@@ -1,104 +1,100 @@
 #!/usr/bin/env python3
-#
-# TCP sender for /imu_pose_raw  (PORT 5005)
-#            and /cam_pose_raw  (PORT 5006)
-#
-# Packet (little-endian, 40 bytes):
-#   struct.pack('<d f f f f f f f f',
-#               unix_time,
-#               x, y, z,
-#               qx, qy, qz, qw,
-#               voltage)
-#
-# Replace get_voltage_placeholder() with real INA226 / ADC code.
+"""
+tcp_pose_sender_le_f64.py
+ROS 2 ? TCP bridge (little-endian, 40 B) with
+ double timestamp
+ live INA226 voltage (fallback = 11.8 V)
+ 10-second debug prints
+"""
 
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 import socket, struct, time, threading
 
-# ---------------------------- USER SETTINGS ---------------------------------
-TCP_HOST   = '10.180.130.167'   # <- Windows PC IP
-IMU_PORT   = 5005
-CAM_PORT   = 5006
-SEND_HZ    = 100              # independent send rate for each stream
+# ------------------ USER SETTINGS ------------------------------------------
+TCP_HOST       = "192.168.0.101"#"172.20.10.8"
+IMU_PORT       = 5005
+CAM_PORT       = 5006
+FUSION_PORT    = 5007
+SEND_HZ        = 100
+DBG_PERIOD_S   = 10.0          # print once per stream every N seconds
+# INA226 / INA219
+INA_ADDR       = 0x40
+REG_BUS_VOLT   = 0x02
+LSB_VOLT       = 1.25e-3       # 1.25 mV per bit
 # ---------------------------------------------------------------------------
 
-def get_voltage_placeholder() -> float:
-    # TOD: implement actual measurement
-    return 11.5
+PKT = struct.Struct('<dffffffff')   # double ts + 8float32 = 40 B
+
+
+# ------------- voltage helper ----------------------------------------------
+try:
+    from smbus2 import SMBus
+    _bus = SMBus(1)
+except (ImportError, FileNotFoundError):
+    _bus = None                    # no IC or smbus2 not installed
+
+
+def read_voltage_v() -> float:
+    """Return bus voltage in volts; fall back to constant on error."""
+    if _bus is None:
+        return 11.8
+    try:
+        raw = _bus.read_word_data(INA_ADDR, REG_BUS_VOLT)
+        raw = ((raw << 8) & 0xFF00) | (raw >> 8)     # byte-swap
+        return raw * LSB_VOLT
+    except OSError:
+        return 11.8
+# ---------------------------------------------------------------------------
+
 
 class PoseTCPSender(Node):
     def __init__(self):
-        super().__init__('tcp_pose_sender')
+        super().__init__('tcp_pose_sender_le_f64')
 
-        # shared state
-        self._imu_pose = None
-        self._cam_pose = None
-        self._lock     = threading.Lock()
+        self._imu_pose = self._cam_pose = self._fusion_pose = None
+        self._lock = threading.Lock()
 
-        # ROS subscriptions ---------------------------------------------------
-        self.create_subscription(PoseStamped, '/IMUpose', self._imu_cb,  10)
-        self.create_subscription(PoseStamped, '/CAMpose', self._cam_cb, 10)
+        # ROS subscriptions --------------------------------------------------
+        self.create_subscription(
+            PoseStamped, '/IMUpose',
+            lambda m: self._set('_imu_pose', m.pose), 10)
 
-        # socket handles
-        self._imu_sock = None
-        self._cam_sock = None
+        self.create_subscription(
+            PoseStamped, '/CAMpose',
+            lambda m: self._set('_cam_pose', m.pose), 10)
 
-        # worker threads ------------------------------------------------------
+        self.create_subscription(
+            PoseWithCovarianceStamped, '/ov_msckf/poseimu',
+            lambda m: self._set('_fusion_pose', m.pose.pose), 10)   # ? fixed typo
+
+        # one worker per stream ---------------------------------------------
         threading.Thread(target=self._worker,
-                         args=('imu', IMU_PORT, SEND_HZ),
+                         args=('imu',    IMU_PORT,    '_imu_pose'),
                          daemon=True).start()
         threading.Thread(target=self._worker,
-                         args=('cam', CAM_PORT, SEND_HZ),
+                         args=('cam',    CAM_PORT,    '_cam_pose'),
+                         daemon=True).start()
+        threading.Thread(target=self._worker,
+                         args=('fusion', FUSION_PORT, '_fusion_pose'),
                          daemon=True).start()
 
-    # ---------------- ROS callbacks -----------------
-    def _imu_cb(self, msg: PoseStamped):
+    # ------------- helpers -------------------------------------------------
+    def _set(self, attr, msg):
         with self._lock:
-            self._imu_pose = msg.pose
+            setattr(self, attr, msg)
 
-    def _cam_cb(self, msg: PoseStamped):
-        with self._lock:
-            self._cam_pose = msg.pose
+    def _packet(self, pose) -> bytes:
+        p, q = pose.position, pose.orientation
+        return PKT.pack(
+            time.time(),            # float64 seconds
+            p.x, p.y, p.z,
+            q.x, q.y, q.z, q.w,
+            read_voltage_v()        # live voltage
+        )
 
-    # ---------------- worker loop ------------------
-    def _worker(self, which: str, port: int, hz: float):
-        sock_attr  = f'_{which}_sock'
-        pose_attr  = f'_{which}_pose'
-        period     = 1.0 / hz
-
-        while rclpy.ok():
-            sock = getattr(self, sock_attr)
-            if sock is None:
-                sock = self._connect(port)
-                setattr(self, sock_attr, sock)
-
-            with self._lock:
-                pose = getattr(self, pose_attr)
-
-            if pose:
-                pkt = self._build_packet(pose)
-                try:
-                    sock.sendall(pkt)
-                except (BrokenPipeError, OSError):
-                    sock.close()
-                    setattr(self, sock_attr, None)
-
-            time.sleep(period)
-
-    # ------------- packet builder ------------------
-    def _build_packet(self, pose: PoseStamped) -> bytes:
-        p = pose.position
-        q = pose.orientation
-        return struct.pack('<dffffffff',
-                           time.time(),
-                           p.x, p.y, p.z,
-                           q.x, q.y, q.z, q.w,
-                           get_voltage_placeholder())
-
-    # ------------- connection helper ---------------
-    def _connect(self, port: int) -> socket.socket:
+    def _connect(self, port: int):
         while rclpy.ok():
             try:
                 s = socket.create_connection((TCP_HOST, port))
@@ -108,7 +104,44 @@ class PoseTCPSender(Node):
                 self.get_logger().warn(f'{port}: {e}; retrying in 1 s')
                 time.sleep(1)
 
-# --------------------------- main ---------------------------
+    # ------------- worker --------------------------------------------------
+    def _worker(self, tag: str, port: int, pose_attr: str):
+        period   = 1.0 / SEND_HZ
+        next_dbg = time.time() + DBG_PERIOD_S
+        sock     = None
+
+        while rclpy.ok():
+            if sock is None:
+                sock = self._connect(port)
+
+            with self._lock:
+                pose = getattr(self, pose_attr)
+
+            if pose:
+                try:
+                    sock.sendall(self._packet(pose))
+                except (BrokenPipeError, OSError):
+                    sock.close(); sock = None
+
+            # periodic debug print
+            now = time.time()
+            if now >= next_dbg:
+                next_dbg = now + DBG_PERIOD_S
+                if pose:
+                    self.get_logger().info(
+                        f'[{tag.upper():6}] ts={now:.1f}  '
+                        f'pos=({pose.position.x:+.3f},'
+                        f'{pose.position.y:+.3f},'
+                        f'{pose.position.z:+.3f})  '
+                        f'volt={read_voltage_v():.2f} V'
+                    )
+                else:
+                    self.get_logger().info(f'[{tag.upper():6}] no pose yet')
+
+            time.sleep(period)
+
+
+# ------------------------------ main ---------------------------------------
 def main():
     rclpy.init()
     node = PoseTCPSender()
@@ -119,6 +152,7 @@ def main():
     finally:
         node.destroy_node()
         rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()

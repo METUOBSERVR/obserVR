@@ -14,8 +14,8 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
 # ---------- Camera parameters ----------
-WIDTH  = 480
-HEIGHT = 640
+WIDTH  = 640#480
+HEIGHT = 480#640
 FPS    = 30
 
 # ---------- ROS->RTSP bridge node ----------
@@ -27,14 +27,14 @@ class Cam1RTSP(Node):
         self.lock   = threading.Lock()
 
         # ROS subscription
-        self.create_subscription(Image, '/cam1/image_raw', self.cb, 5)
+        self.create_subscription(Image, '/cam0/image_raw', self.cb, 5)
 
         # GStreamer/RTSP init
         Gst.init(None)
         self.loop = GLib.MainLoop()
         threading.Thread(target=self.loop.run, daemon=True).start()
         self.setup_rtsp_server()
-        self.get_logger().info("RTSP ready at rtsp://<Pi_IP>:8554/cam")
+        self.get_logger().info("RTSP ready at rtsp://<Pi_IP>:8555/cam")
 
     # ---------- ROS callback ----------
     def cb(self, msg: Image):
@@ -48,7 +48,7 @@ class Cam1RTSP(Node):
     # ---------- RTSP server Pipeline ----------
     def setup_rtsp_server(self):
         server = GstRtspServer.RTSPServer()
-        server.set_service("8554")
+        server.set_service("8555")
 
         factory = GstRtspServer.RTSPMediaFactory()
         factory.set_shared(True)

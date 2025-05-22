@@ -29,7 +29,8 @@ class DualCamPublisher(Node):
         cam_cfg = dict(
             controls={'FrameRate': sensor_fps,
                       'AfMode': controls.AfModeEnum.Manual,
-                      'LensPosition': 1.1},
+                      'LensPosition': 0.333},
+		    #  'LensPosition': 1.1},
             main={'format': 'XRGB8888', 'size': size},   # WxH
             raw={'format': 'SRGGB10_CSI2P', 'size': (1536, 864)}
         )
@@ -60,8 +61,8 @@ class DualCamPublisher(Node):
             img1 = cv2.rotate(img1, cv2.ROTATE_90_CLOCKWISE)
 
             # Picamera2 gives XRGB → convert to BGR (drop alpha)
-            img_left  = cv2.cvtColor(img0,  cv2.COLOR_RGBA2RGB)
-            img_right = cv2.cvtColor(img1, cv2.COLOR_RGBA2RGB)
+            img_left  = cv2.cvtColor(img0,  cv2.COLOR_BGRA2RGB)
+            img_right = cv2.cvtColor(img1, cv2.COLOR_BGRA2RGB)
 
             msg0 = self.bridge.cv2_to_imgmsg(img_left, encoding="rgb8")
             msg1 = self.bridge.cv2_to_imgmsg(img_right, encoding="rgb8")
